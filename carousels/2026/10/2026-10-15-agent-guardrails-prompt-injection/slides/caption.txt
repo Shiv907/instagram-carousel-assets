@@ -1,0 +1,18 @@
+One web page can hijack your agent. Here's how to defend it in layers 👇
+
+→ Filter inputs for jailbreaks and prompt injection before they reach the model
+→ Treat everything a tool returns (pages, emails, docs) as data, never as instructions
+→ Give tools the least privilege possible: scoped credentials, allow-listed actions
+→ Check actions and outputs before they run
+→ Ask a human before anything you can't undo
+
+Watch out on AWS: the Bedrock Guardrails prompt-attack filter does not evaluate tool results, so validate tool output as its own layer.
+
+"Never do X" in the system prompt is not a defence. Layers are.
+
+Save this before you give your agent real tools 🔖 Share it with your security team.
+Follow @shivanshu_builds for practical agent engineering.
+
+Source: https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentsec08-bp01.html
+
+#aisecurity #promptinjection #aiagents #agenticai #llm

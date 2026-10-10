@@ -1,0 +1,18 @@
+AWS now has an AI architect for your cloud. Well-Architected Agent is in public preview 👇
+
+→ Analyzes your AWS environment for cost, security, performance and resilience
+→ You declare business goals; recommendations are prioritized by impact and effort
+→ Three levels: resource findings, application findings, architectural patterns with IaC changes
+→ Remediation paths: console walk-throughs, updated IaC templates, CLI commands, SSM runbooks
+→ Review Terraform, CloudFormation or CDK before you deploy
+
+Needs an AWS Support plan. Available in us-east-1, us-east-2 and us-west-2 (workloads can onboard from any commercial Region). Treat recommendations as drafts — GenAI can err, so evaluate before applying.
+
+Save this for your next architecture review 🔖
+Follow @shivanshu_builds for practical AWS and agentic AI breakdowns.
+
+Sources:
+https://aws.amazon.com/blogs/aws/announcing-aws-well-architected-agent-an-ai-powered-intelligence-to-optimize-your-cloud-environment-preview/
+https://aws.amazon.com/about-aws/whats-new/2026/10/aws-well-architected-agent/
+
+#aws #wellarchitected #cloudarchitecture #aiagents #devops

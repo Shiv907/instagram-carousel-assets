@@ -1,0 +1,16 @@
+Embeddings turn meaning into numbers. Part 2 of the RAG series 👇
+
+→ An embedding model turns a piece of text into a list of numbers, a vector
+→ Texts with similar meaning get vectors that sit close together
+→ "reset my password" lands near "I forgot my login", far from "pizza recipe"
+→ Search then means finding the vectors closest to your question
+→ Use the same embedding model for your documents and your questions
+
+Think of a supermarket: similar things sit on the same shelf, so you find bread by walking to the bread aisle.
+
+Save this, parts 3 to 5 build on it 🔖
+Follow @shivanshu_builds for the RAG series. Part 3 (keyword vs semantic search) is on Friday.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-supported.html
+
+#ragseries #embeddings #rag #genai #aws

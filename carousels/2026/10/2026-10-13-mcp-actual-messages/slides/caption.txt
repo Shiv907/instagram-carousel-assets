@@ -1,0 +1,15 @@
+MCP is just JSON-RPC messages. Once you've seen them, it stops feeling like magic 👇
+
+→ tools/list: the server describes each tool with a name, description and JSON Schema
+→ tools/call: the client sends the tool name and arguments
+→ The result comes back as content blocks, with isError when something failed
+→ The model never talks to the server. Your agent's MCP client does
+
+New in the latest spec revision (2026-07-28): MCP is stateless. Every request carries its protocol version, and the old initialize handshake is now the legacy path.
+
+Save this for when you write your first MCP server 🔖
+Follow @shivanshu_builds for more practical AI engineering breakdowns.
+
+Spec: https://modelcontextprotocol.io/specification/2026-07-28/server/tools
+
+#mcp #aiagents #agenticai #llm #softwareengineering

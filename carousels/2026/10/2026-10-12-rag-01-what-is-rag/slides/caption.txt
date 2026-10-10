@@ -1,0 +1,17 @@
+RAG in one line: let the model look things up before it answers. Part 1 of a 16-part RAG series 👇
+
+→ An LLM only knows its training data. It doesn't know your docs
+→ RAG adds a lookup step: find the relevant pieces of your documents first
+→ Those pieces go into the prompt, and the model answers from them
+→ Setup happens once (chunk, embed, store). Lookup happens on every question
+
+Think of a new support hire with the company handbook. They don't memorise it. They find the right page, then answer.
+
+On AWS, Amazon Bedrock Knowledge Bases runs the whole pipeline for you.
+
+Save this, the whole series builds on it 🔖
+Follow @shivanshu_builds for all 16 parts. Part 2 (embeddings) is on Wednesday.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-retrieval.html
+
+#ragseries #rag #genai #llm #aws
