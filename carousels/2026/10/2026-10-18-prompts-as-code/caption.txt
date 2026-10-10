@@ -1,0 +1,16 @@
+Your system prompt is production code. Treat it that way 👇
+
+→ Keep prompts in version control, not in a console text box
+→ Log the prompt version on every trace, so you know which one produced a bad answer
+→ Run your eval set before and after every edit and compare with a baseline
+→ Make rollback a one-line config change
+→ Don't tune until the eval set passes. That's overfitting, not improvement
+
+AWS now has a system prompt optimizer in AgentCore that proposes changes from real traces, then lets you A/B test them before promoting.
+
+Save this before your next prompt edit 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+Source: https://aws.amazon.com/blogs/machine-learning/optimizing-agent-system-prompts-with-amazon-bedrock-agentcore/
+
+#aiagents #llmops #promptengineering #agenticai #aws

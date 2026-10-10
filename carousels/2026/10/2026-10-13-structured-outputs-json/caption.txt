@@ -1,0 +1,14 @@
+Stop parsing LLM JSON with regex and hope. Use structured outputs 👇
+
+→ Asking for JSON in the prompt works until one response adds a sentence or drops a field
+→ Structured outputs constrain the response to a JSON schema you send
+→ On Amazon Bedrock you can send a JSON schema as the output format, or set strict: true on a tool definition
+→ Use enums and required fields so there's nothing left to guess
+→ Valid JSON can still be wrong, so keep validating business rules
+
+Save this for the next time a model breaks your parser 🔖
+Follow @shivanshu_builds for practical AI engineering, one carousel a day.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html
+
+#llm #aiengineering #genai #aws #softwareengineering

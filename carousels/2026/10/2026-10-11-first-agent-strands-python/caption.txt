@@ -1,0 +1,17 @@
+Your first AI agent in about 15 lines of Python 👇
+
+1. pip install strands-agents
+2. Create an Agent. It works with Amazon Bedrock by default, or plug in another provider
+3. Write a normal Python function and add @tool
+4. Pass it in with Agent(tools=[...]) and ask a question
+
+The model reads your function's docstring and type hints to decide when to call it. That's why a clear docstring matters more than clever code.
+
+Under the hood it's the same loop from Monday: read, decide, act, observe.
+
+Save this and build it tonight 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+Source: https://strandsagents.com/docs/user-guide/sdk/quickstart/python/
+
+#aiagents #python #agenticai #aws #buildinpublic
