@@ -1,0 +1,16 @@
+The Agentic AI roadmap for developers in 2026. 6 stages, in order 👇
+
+1. LLM fundamentals: tokens, context windows, structured output
+2. Tool calling and the agent loop
+3. RAG and memory
+4. MCP, A2A and one framework you learn properly
+5. Evals and tracing, before you ship
+6. Production: guardrails, cost, deployment, human approval
+
+Each stage ends with a small project. Build all 6 and you have a portfolio that shows you can ship agents, not just demo them.
+
+Comment ROADMAP and I'll send you the links for every stage.
+Save this so you can come back to it 🔖
+Follow @shivanshu_builds for practical AI engineering breakdowns.
+
+#agenticai #aiagents #aiengineering #developers #learnai

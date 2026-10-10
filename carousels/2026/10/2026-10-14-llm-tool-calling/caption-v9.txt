@@ -1,0 +1,16 @@
+The LLM never runs your tool. Here's what actually happens when it "calls" one 👇
+
+1. You send the messages plus tool definitions: name, description, JSON schema
+2. The model replies with a structured tool request, not an answer
+3. Your code validates the arguments and runs the function
+4. You send the result back with the matching tool-use ID
+5. The model reads it and answers, or asks for another tool
+
+The model only sees your tool's name, description and schema. That makes the description part of your prompt, so write it like one.
+
+Save this for the next time a model calls the wrong tool 🔖
+Follow @shivanshu_builds for more practical AI engineering breakdowns.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/tool-use.html
+
+#llm #aiagents #functioncalling #agenticai #softwareengineering

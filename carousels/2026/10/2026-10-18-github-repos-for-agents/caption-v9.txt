@@ -1,0 +1,15 @@
+10 GitHub repos for building AI agents, from framework to memory to evals 👇
+
+→ Frameworks: LangGraph, OpenAI Agents SDK, Strands Agents
+→ Multi-agent: CrewAI
+→ Typed or minimal: Pydantic AI, smolagents, Google ADK
+→ Tools over MCP: awslabs/mcp
+→ Memory and tracing: Mem0, Langfuse
+
+You don't need all 10. Pick one framework, go deep, then add memory and tracing when your agent needs them. Slide 8 tells you where to start.
+
+Comment REPOS and I'll send you all 10 links plus a bonus samples repo.
+Save this for your next build 🔖
+Follow @shivanshu_builds for practical AI engineering resources.
+
+#aiagents #github #opensource #agenticai #python

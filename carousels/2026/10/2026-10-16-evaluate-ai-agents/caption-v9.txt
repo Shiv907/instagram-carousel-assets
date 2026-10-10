@@ -1,0 +1,16 @@
+Checking the final answer isn't an agent eval. Here's how to evaluate agents properly 👇
+
+→ Evaluate the trajectory: which tool or skill it picked, and whether it followed the steps
+→ Use deterministic checks where you can (was this tool called? is the JSON valid?)
+→ Use LLM-as-judge for fuzzy qualities like helpfulness, with a written rubric for every score
+→ Calibrate the judge against a few human-labelled examples
+→ Gate deployments on the eval suite, then keep scoring production traces
+
+An agent can give a fluent answer while choosing the wrong skill or skipping a step. AWS added Skill Selection Accuracy and Skill Instruction Following evaluators to Strands Evals and AgentCore Evaluations to catch exactly that.
+
+Save this for your next eval setup 🔖
+Follow @shivanshu_builds for practical agent engineering.
+
+Source: https://aws.amazon.com/blogs/machine-learning/evaluate-skill-equipped-agents-with-strands-evals-and-amazon-bedrock-agentcore/
+
+#aiagents #llmevaluation #agenticai #llmops #aws

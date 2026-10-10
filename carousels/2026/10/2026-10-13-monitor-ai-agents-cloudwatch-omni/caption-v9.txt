@@ -1,0 +1,15 @@
+Your agent returned 200 OK. The answer was still wrong. Here's how to monitor agents in production 👇
+
+→ Trace every step: LLM calls, tool calls, tokens, latency
+→ Score quality with evals, because latency and error rate won't catch a bad answer
+→ Compare traces before and after every prompt change
+→ Build test datasets from real production traffic
+
+New: AWS launched Amazon CloudWatch Omni — observability, evals and experiments for AI agents across model providers and frameworks. Traces show up in VS Code and Kiro while you build, operators get a separate web experience, and it ships with 17 built-in evaluators.
+
+Save this before your next agent goes live 🔖
+Follow @shivanshu_builds for the latest in agentic AI, explained for developers.
+
+Source: https://aws.amazon.com/blogs/aws/introducing-amazon-cloudwatch-omni-ai-powered-observability-for-generative-ai-and-agentic-workloads/
+
+#aiagents #observability #llmops #aws #agenticai

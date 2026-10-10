@@ -1,0 +1,15 @@
+4 agent frameworks. Which one should you learn? 👇
+
+→ LangGraph: low-level orchestration for stateful agents — pick when you want control over every step
+→ CrewAI: role-based agents that work together as a crew
+→ OpenAI Agents SDK: a lightweight framework for multi-agent workflows
+→ Strands Agents: open-source SDK, Python and TypeScript, any model, Bedrock by default
+
+They all run the same loop underneath. Pick by how much control you want, your cloud and your language. Then learn it properly.
+
+What transfers between all four: tool design, evals, tracing and guardrails.
+
+Save this before you pick one 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+#aiagents #langgraph #crewai #agenticai #python

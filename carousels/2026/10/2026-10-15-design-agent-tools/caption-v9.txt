@@ -1,0 +1,16 @@
+Your tool description is a prompt. Here's how to design tools an agent can actually use 👇
+
+→ Give each tool one job and a name that says it: search_orders_by_email, not process
+→ In the description, say when to use it and when not to
+→ Use typed, constrained parameters: enums and defaults beat free text
+→ Return small, structured results, not the whole database row
+→ Return errors as messages the model can act on, not raw stack traces
+
+Yesterday was how tool calls work. Today is how to write tools that get called correctly.
+
+Save this for your next tool 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+Source: https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/
+
+#aiagents #agenticai #llm #softwareengineering
