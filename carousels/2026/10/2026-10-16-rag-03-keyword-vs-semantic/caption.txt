@@ -1,0 +1,16 @@
+Keyword search matches words. Semantic search matches meaning. Part 3 of the RAG series 👇
+
+→ Keyword search finds documents that contain your exact words
+→ Semantic search finds documents that mean the same thing, even with different words
+→ "laptop won't turn on" needs semantic search to find "device fails to power up"
+→ "invoice INV-20931" needs keyword search, because an ID has no meaning to match
+→ Most real questions need both, which is where hybrid search comes in (part 5)
+
+Think Ctrl+F vs asking a colleague who knows what you mean.
+
+Save this for your next search feature 🔖
+Follow @shivanshu_builds for the RAG series. Part 4 (vector databases) is on Monday.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html
+
+#ragseries #rag #semanticsearch #genai

@@ -1,0 +1,14 @@
+How does a vector database search millions of vectors fast? It doesn't check them all. Part 4 of the RAG series 👇
+
+→ Exact search compares your question with every stored vector. Too slow at scale
+→ Approximate nearest neighbour (ANN) search finds very close matches with far less work
+→ HNSW, a popular ANN index, is a layered graph: big jumps on top, small steps at the bottom
+→ It's like finding a house: highway to the area, main road, then side streets
+→ On AWS you can run vector search in OpenSearch Service, pgvector on RDS, MemoryDB, DocumentDB, Neptune Analytics or S3 Vectors
+
+Save this for when someone asks why vector search is fast 🔖
+Follow @shivanshu_builds for the RAG series. Part 5 (hybrid search) is on Wednesday.
+
+Source: https://docs.aws.amazon.com/prescriptive-guidance/latest/choosing-an-aws-vector-database-for-rag-use-cases/vector-db-options.html
+
+#ragseries #vectordatabase #rag #genai #aws

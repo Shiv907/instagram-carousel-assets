@@ -1,0 +1,15 @@
+Free courses to learn AI agent development, from your first agent to production 👇
+
+→ Start with the fundamentals: Hugging Face's AI Agents Course and Microsoft's AI Agents for Beginners
+→ Learn one framework properly: LangGraph via LangChain Academy or DeepLearning.AI
+→ Learn MCP, so your agents can plug into real tools
+→ Then deploy something with the Strands docs, the AgentCore samples and AWS Skill Builder's free Introduction to Agentic AI on AWS
+
+Take one course per stage and build alongside it. The suggested order is on slide 7.
+(DeepLearning.AI courses are free for a limited time during its platform beta.)
+
+Comment COURSES and I'll send you every link.
+Save this for the weekend 🔖
+Follow @shivanshu_builds for practical AI engineering resources.
+
+#aiagents #learnai #freecourses #agenticai #developers

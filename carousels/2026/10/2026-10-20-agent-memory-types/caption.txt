@@ -1,0 +1,15 @@
+Your agent forgets everything after each session, unless you give it memory. Here are the types 👇
+
+→ Short-term: the conversation so far, inside one session
+→ Long-term: facts and preferences extracted and kept across sessions
+→ Summaries: compressed history so the context window doesn't overflow
+→ Episodic: important moments from past interactions, plus reflections on what worked
+
+The context window is not memory. Memory is what you choose to extract, store and bring back.
+
+Save this for your next agent build 🔖
+Follow @shivanshu_builds for more practical AI engineering breakdowns.
+
+Source: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory-strategies.html
+
+#aiagents #agentmemory #agenticai #llm #aws
