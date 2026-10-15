@@ -1,0 +1,18 @@
+4 agent frameworks. Which one should you actually learn?
+
+→ 𝗟𝗮𝗻𝗴𝗚𝗿𝗮𝗽𝗵: low-level orchestration for stateful agents. Pick it when you want control over every step.
+→ 𝗖𝗿𝗲𝘄𝗔𝗜: role-based agents that work together as a crew.
+→ 𝗢𝗽𝗲𝗻𝗔𝗜 𝗔𝗴𝗲𝗻𝘁𝘀 𝗦𝗗𝗞: a lightweight framework for multi-agent workflows.
+→ 𝗦𝘁𝗿𝗮𝗻𝗱𝘀 𝗔𝗴𝗲𝗻𝘁𝘀: open-source SDK in Python and TypeScript, works with any model, Bedrock by default.
+
+Underneath, all four run 𝘁𝗵𝗲 𝘀𝗮𝗺𝗲 𝗹𝗼𝗼𝗽: the model reasons, calls a tool, reads the result, and repeats until it's done.
+
+So pick by three things: how much 𝗰𝗼𝗻𝘁𝗿𝗼𝗹 you want, which 𝗰𝗹𝗼𝘂𝗱 you're on, and which 𝗹𝗮𝗻𝗴𝘂𝗮𝗴𝗲 your team writes. Then learn that one properly.
+
+What transfers between all four: 𝘁𝗼𝗼𝗹 𝗱𝗲𝘀𝗶𝗴𝗻, 𝗲𝘃𝗮𝗹𝘀, 𝘁𝗿𝗮𝗰𝗶𝗻𝗴 and 𝗴𝘂𝗮𝗿𝗱𝗿𝗮𝗶𝗹𝘀. Get those right and switching frameworks later is a weekend, not a rewrite.
+
+Docs for all four are in the first comment.
+
+Which one are you building with right now?
+
+#AIAgents #AgenticAI #LangGraph #CrewAI #AWS

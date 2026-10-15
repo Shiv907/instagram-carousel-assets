@@ -1,0 +1,3 @@
+Source:
+
+AWS ML blog, how Postman runs Agent Mode on Amazon Bedrock: https://aws.amazon.com/blogs/machine-learning/how-postman-runs-agent-mode-for-40-million-developers-on-amazon-bedrock/

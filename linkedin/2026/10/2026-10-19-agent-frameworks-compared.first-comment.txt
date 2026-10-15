@@ -1,0 +1,6 @@
+Docs:
+
+LangGraph: https://langchain-ai.github.io/langgraph/
+CrewAI: https://docs.crewai.com/
+OpenAI Agents SDK: https://openai.github.io/openai-agents-python/
+Strands Agents: https://strandsagents.com/

@@ -1,0 +1,19 @@
+Giving your agent more tools can make it worse.
+
+In Postman's testing, 𝘁𝗼𝗼𝗹-𝘀𝗲𝗹𝗲𝗰𝘁𝗶𝗼𝗻 𝗲𝗿𝗿𝗼𝗿𝘀 𝘄𝗲𝗻𝘁 𝘂𝗽 𝗼𝗻𝗰𝗲 𝘁𝗵𝗲 𝗮𝗴𝗲𝗻𝘁 𝗰𝗼𝘂𝗹𝗱 𝘀𝗲𝗲 𝗺𝗼𝗿𝗲 𝘁𝗵𝗮𝗻 𝗮𝗯𝗼𝘂𝘁 𝟰𝟬 𝘁𝗼𝗼𝗹𝘀. It called tools that didn't exist, passed wrong arguments despite valid schemas, or picked tools that sounded right but weren't.
+
+Here's what they did about it in Agent Mode on Amazon Bedrock:
+
+→ 𝗥𝗲𝘁𝗿𝗶𝗲𝘃𝗲 𝘁𝗼𝗼𝗹𝘀, 𝗱𝗼𝗻’𝘁 𝗹𝗶𝘀𝘁 𝘁𝗵𝗲𝗺. A root agent queries a vector database of tool embeddings and narrows 𝟭𝟳𝟬+ 𝘁𝗼𝗼𝗹𝘀 𝗱𝗼𝘄𝗻 𝘁𝗼 𝗮𝗯𝗼𝘂𝘁 𝟭𝟱 for the request.
+→ 𝗜𝘀𝗼𝗹𝗮𝘁𝗲 𝗰𝗼𝗻𝘁𝗲𝘅𝘁. Those tools go to a context-isolated sub-agent, so the model only sees what the task needs.
+→ 𝗢𝗻𝗲 𝗾𝘂𝗲𝗿𝘆 𝘁𝗼𝗼𝗹 𝗶𝗻𝘀𝘁𝗲𝗮𝗱 𝗼𝗳 𝗺𝗮𝗻𝘆 𝗿𝗲𝗮𝗱 𝘁𝗼𝗼𝗹𝘀. With the ClickHouse table schemas, the agent writes one query with joins and WHERE clauses instead of calling a dozen narrow tools.
+→ 𝗔𝗽𝗽𝗿𝗼𝘃𝗮𝗹 𝗼𝗻 𝘄𝗿𝗶𝘁𝗲𝘀. Actions that change application state need the user's approval.
+→ 𝗣𝗜𝗜 𝗿𝗲𝗱𝗮𝗰𝘁𝗶𝗼𝗻 with Bedrock Guardrails before data reaches the model.
+
+My take: your tool catalog is part of your 𝗰𝗼𝗻𝘁𝗲𝘅𝘁 𝗯𝘂𝗱𝗴𝗲𝘁. Every tool description you add costs tokens and adds one more wrong option to pick.
+
+Source in the first comment.
+
+How many tools does your agent see on a single turn?
+
+#AIAgents #AgenticAI #AmazonBedrock #LLM #AWS

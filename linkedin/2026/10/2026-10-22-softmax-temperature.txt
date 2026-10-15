@@ -1,0 +1,23 @@
+Temperature isn't a creativity dial. It's one division.
+
+Before softmax, the model divides every raw score (logit) by T:
+
+p_i = exp(z_i / T) / Σ_j exp(z_j / T)
+
+Take three tokens with logits [2, 1, 0]:
+→ 𝗧 = 𝟬.𝟱: 0.867 / 0.117 / 0.016 (sharper)
+→ 𝗧 = 𝟭: 0.665 / 0.245 / 0.090 (as-is)
+→ 𝗧 = 𝟮: 0.506 / 0.307 / 0.186 (flatter)
+
+Three things fall out of the maths:
+→ 𝗧𝗵𝗲 𝗿𝗮𝗻𝗸𝗶𝗻𝗴 𝗻𝗲𝘃𝗲𝗿 𝗰𝗵𝗮𝗻𝗴𝗲𝘀. Dividing by a positive T keeps the order of the logits, so the top token stays on top.
+→ 𝗟𝗼𝘄 𝗧 pushes almost all the probability onto that top token. As T approaches 0 you get greedy decoding.
+→ 𝗛𝗶𝗴𝗵 𝗧 spreads probability into the tail, which is where both the "creative" answers and the wrong ones live.
+
+For agents this matters more than for chat. A tool call or a JSON output has one right answer, so I keep T low there and only raise it where variety actually helps.
+
+Worked numbers computed in Python and easy to check yourself.
+
+What temperature do your agents run at for tool calls?
+
+#MachineLearning #LLM #AIAgents #Python #DeepLearning

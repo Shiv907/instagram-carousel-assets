@@ -1,0 +1,3 @@
+Source:
+
+AWS What's New, Bedrock product attributes in Cost Explorer, Budgets and Dashboards: https://aws.amazon.com/about-aws/whats-new/2026/10/aws-bedrock-attributes-in-cost-explorer/

@@ -1,0 +1,26 @@
+Which model is burning your LLM budget?
+
+Until recently, the honest answer on AWS was often "Bedrock, somewhere."
+
+AWS 𝗖𝗼𝘀𝘁 𝗘𝘅𝗽𝗹𝗼𝗿𝗲𝗿, 𝗕𝘂𝗱𝗴𝗲𝘁𝘀 𝗮𝗻𝗱 𝗖𝗼𝘀𝘁 𝗠𝗮𝗻𝗮𝗴𝗲𝗺𝗲𝗻𝘁 𝗗𝗮𝘀𝗵𝗯𝗼𝗮𝗿𝗱𝘀 now break down Amazon Bedrock cost by 𝗽𝗿𝗼𝗱𝘂𝗰𝘁 𝗮𝘁𝘁𝗿𝗶𝗯𝘂𝘁𝗲𝘀:
+→ 𝗠𝗼𝗱𝗲𝗹
+→ 𝗠𝗼𝗱𝗲𝗹 𝗽𝗿𝗼𝘃𝗶𝗱𝗲𝗿 (for example Anthropic or Cohere)
+→ 𝗜𝗻𝗳𝗲𝗿𝗲𝗻𝗰𝗲 𝘁𝘆𝗽𝗲 (input tokens vs output tokens)
+→ 𝗙𝗲𝗮𝘁𝘂𝗿𝗲 (for example on-demand inference or reranker)
+
+The useful part is combining them:
+→ Add 𝗰𝗼𝘀𝘁 𝗮𝗹𝗹𝗼𝗰𝗮𝘁𝗶𝗼𝗻 𝘁𝗮𝗴𝘀 on application inference profiles, projects or workspaces to see 𝘄𝗵𝗶𝗰𝗵 𝗮𝗽𝗽 drives spend on each model.
+→ Add 𝗜𝗔𝗠 𝗽𝗿𝗶𝗻𝗰𝗶𝗽𝗮𝗹 𝘁𝗮𝗴𝘀 to see 𝘄𝗵𝗶𝗰𝗵 𝘂𝘀𝗲𝗿𝘀 𝗼𝗿 𝗿𝗼𝗹𝗲𝘀 drive it.
+
+A 3-step setup I'd do this week:
+1. Tag every application inference profile with the app or agent name.
+2. Group last month's Bedrock cost by model and by that tag.
+3. Set a 𝗯𝘂𝗱𝗴𝗲𝘁 𝗮𝗹𝗲𝗿𝘁 𝗽𝗲𝗿 𝗺𝗼𝗱𝗲𝗹, so a runaway agent loop shows up before the invoice does.
+
+It costs nothing extra and is available in all commercial AWS Regions (not GovCloud or the China Regions).
+
+Source in the first comment.
+
+Do you know your cost per agent today, or just your total Bedrock bill?
+
+#AWS #FinOps #AmazonBedrock #AIAgents #LLMOps
