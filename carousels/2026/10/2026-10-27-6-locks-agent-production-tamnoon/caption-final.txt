@@ -1,0 +1,17 @@
+Getting an agent to reason about a cloud misconfiguration is the easy part. Letting it touch production is the hard part. These are the 6 locks Tamnoon puts in front of its remediation agents on Amazon Bedrock 👇
+
+1. A safety verdict comes first. Every fix gets rated SAFE, RISKY or AWAITING DATA, and the rater downgrades when it's unsure.
+2. Investigation stays read-only. Every investigation step is checked to make sure it only reads.
+3. Back up, fix, then verify, with rollback guidance on every step.
+4. A separate reviewer. Generated code goes through a prompt-injection guardrail, and then a different agent has to approve it.
+5. The agent never holds credentials. It runs with short-lived, tenant-scoped credentials in an isolated environment.
+6. A human approves, everything goes in an audit trail, and model versions are pinned to dated IDs.
+
+What I like about this: each layer assumes the one before it might miss something. Tamnoon says it's seen up to 90% less critical cloud exposure in 90 days (their own number).
+
+Save this before you give your agent write access 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+Source: https://aws.amazon.com/blogs/machine-learning/how-tamnoon-built-ai-powered-cloud-security-remediation-with-amazon-bedrock/
+
+#aiagents #aisecurity #agenticai #amazonbedrock #aws

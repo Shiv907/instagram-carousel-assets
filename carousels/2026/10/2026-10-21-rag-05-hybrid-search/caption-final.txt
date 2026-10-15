@@ -1,0 +1,20 @@
+Keyword search misses meaning. Semantic search misses exact IDs. Hybrid search gets you both. Part 5 of the RAG series 👇
+
+Keyword search (BM25) catches exact codes, IDs and error messages.
+Semantic search catches meaning, even when the words are different.
+Hybrid runs both and fuses the two ranked lists into one.
+
+There are two ways to fuse them. Score fusion normalises the scores first. RRF only looks at ranks, so different score scales don't matter.
+
+One catch: a doc that only one list finds can sink to the bottom, so give exact IDs their own fast path.
+
+In Bedrock Knowledge Bases it's one setting per query (overrideSearchType: HYBRID). It works on RDS, OpenSearch Serverless or MongoDB stores that have a filterable text field. Other stores fall back to semantic search.
+
+Think of finding a song: you can type the exact title or hum the tune. A good app takes either clue.
+
+Save this for your next RAG build 🔖
+Follow @shivanshu_builds for the RAG series. Part 6 (chunking) is next.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html
+
+#ragseries #hybridsearch #rag #genai #aws

@@ -1,0 +1,16 @@
+Before you pay for another agents course, read these. They're 8 free guides from AWS that I'd bookmark if you're building agents 👇
+
+→ Agentic AI patterns and workflows, plus Foundations of agentic AI
+→ Agentic AI frameworks: Strands, LangChain/LangGraph, CrewAI, AutoGen and LlamaIndex compared, plus MCP and A2A
+→ Operationalizing agentic AI, from experiments to enterprise scale
+→ Security for agentic AI: 8 best-practice areas, mapped to the OWASP Top 10
+→ The Well-Architected Agentic AI Lens and Generative AI Lens
+→ Choosing a vector database for RAG
+
+They're all free and all written by AWS. Pick the one that matches what you're building this week. The reading order is on slide 7.
+
+Comment GUIDES and I'll DM you all 8 links.
+Save this for later 🔖
+Follow @shivanshu_builds for practical AI engineering resources.
+
+#aiagents #aws #agenticai #learnai #developers
