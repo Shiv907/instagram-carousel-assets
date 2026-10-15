@@ -1,0 +1,15 @@
+Let your agent act, but not alone. Here's where to put human approval, and how to pause without losing state 👇
+
+→ Pause before anything you can't undo: payments, deletes, emails, production changes
+→ Save the full state at the checkpoint: history, the pending tool call, budget used
+→ Let the human approve, edit or reject, then resume from exactly that point
+→ On AWS there are 4 common ways to interrupt: a Strands loop hook, inside the tool, a remote approver via Step Functions, or MCP elicitation
+→ Put a timeout on pending approvals and re-check the world before resuming
+→ Don't ask for approval on everything, or people stop reading
+
+Save this for your next agent that touches real systems 🔖
+Follow @shivanshu_builds for practical agent engineering.
+
+Source: https://aws.amazon.com/blogs/machine-learning/human-in-the-loop-constructs-for-agentic-workflows-in-healthcare-and-life-sciences/
+
+#aiagents #humanintheloop #agenticai #llmops #softwareengineering

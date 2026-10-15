@@ -1,0 +1,16 @@
+Your agent works on your laptop. Here's what changes when you deploy it 👇
+
+→ Every user needs an isolated session with its own state. AgentCore Runtime gives each session its own microVM
+→ Some runs take minutes or hours, so reply "started" and keep working in the background
+→ Reuse the same session ID, or each request can land on a fresh microVM and a cold start
+→ Keep state outside the process, set timeouts, make tools safe to retry
+→ Turn tracing on before launch, not after the first incident
+
+The new AgentCore Runtime (Sep 18) reclaims memory as it goes cold instead of billing the peak. In AWS's echo-agent test, its P75 cold start stayed around 2 s from a 200 MB to a 2 GB image.
+
+Save this for deploy day 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+Source: https://aws.amazon.com/blogs/machine-learning/the-new-agentcore-runtime-elastic-optimized-and-consistently-fast-starts/
+
+#aiagents #aws #agenticai #devops #serverless

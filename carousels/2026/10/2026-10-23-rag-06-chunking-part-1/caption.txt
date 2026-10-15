@@ -1,0 +1,18 @@
+How you cut your documents decides what your RAG system can find. Chunking, part 1 👇
+
+→ Your retriever finds chunks, not documents. One idea per chunk matches best
+→ Fixed-size: split every N tokens. Simple, but it can cut an idea in half
+→ Recursive: try paragraphs first, then lines, then words, until each piece fits
+→ Overlap: repeat a little text at each edge so a sentence on the boundary survives whole
+→ Overlap isn't free: 20% overlap on a 10,000-token doc means 42 chunks instead of 34
+
+In Bedrock Knowledge Bases, fixed-size is one setting (maxTokens + overlapPercentage). The default is about 300 tokens and keeps sentences whole. For recursive splitting, use a custom Lambda.
+
+Think of highlighting a textbook: a whole chapter helps no one, and single words lose the meaning.
+
+Save this before you index your docs 🔖
+Follow @shivanshu_builds for the RAG series. Part 7 (smarter chunking) is next.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html
+
+#ragseries #chunking #rag #genai
