@@ -146,7 +146,7 @@ def s6(add):
     add("04-icons-pipeline-managed",im)
 @scene(7)
 def s7(add):
-    im,d=L(); d.rounded_rectangle((110,420,970,640),radius=44,fill=CARD,outline=VIOLET,width=6); rich(d,[("Next: ",YEL),("Embeddings",WHITE)],495,F(AB,72)); add("01-card-next-embeddings",im)
+    im,d=L(); d.rounded_rectangle((110,420,970,640),radius=44,fill=CARD,outline=VIOLET,width=6); ctext(d,"Next:",445,F(AB,60),fill=YEL); ctext(d,"Keyword vs Semantic",535,F(AB,62)); add("01-card-next-embeddings",im)
     im,d=L(); ctext(d,"|",690,F(AB,90),fill=MUTED,stroke=0); add("02-divider",im)
     im,d=L(); d.rounded_rectangle((110,850,970,1070),radius=44,fill=CARD,outline=YEL,width=6); rich(d,[("Follow",WHITE),(" + ",YEL),("Save",WHITE)],920,F(AB,96)); add("03-card-follow-save",im)
     im,d=L(); ctext(d,"@shivanshu_builds",1200,F(PB,64),stroke=4); add("04-handle",im)
