@@ -1,0 +1,19 @@
+Retrieval finds candidates. Reranking picks the best ones. Part 8 of the RAG series 👇
+
+→ Vector search is fast but rough, so near-misses sneak into your top results
+→ A reranker reads the question and each chunk together, and scores how well they match
+→ Retrieve a wide shortlist first, rerank it, then send only the best few to the LLM
+→ In Amazon Bedrock you can call the Rerank API directly or turn on reranking in a knowledge base query
+→ Models: Amazon Rerank 1.0 and Cohere Rerank 3.5 — Amazon Rerank 1.0 is not in us-east-1
+
+Think hiring: skim 200 CVs fast, then interview the top 20 properly.
+
+Save this for your next RAG upgrade 🔖
+Follow @shivanshu_builds for the RAG series. Part 9 (query rewriting) is next.
+
+Sources:
+https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-use.html
+https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html
+https://aws.amazon.com/blogs/machine-learning/cohere-rerank-3-5-is-now-available-in-amazon-bedrock-through-rerank-api/
+
+#ragseries #reranking #rag #genai #aws
