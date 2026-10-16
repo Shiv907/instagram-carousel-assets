@@ -1,0 +1,21 @@
+One giant system prompt with every procedure crammed in is hard to debug. Agent skills are the cleaner way 👇
+
+A skill is a small playbook for one task, usually a SKILL.md file. It can bundle instructions, tools, reference docs, a workflow and rules.
+
+The trick is how it loads. The agent only reads the short skill descriptions, then pulls in the one skill it actually needs.
+
+Skills follow the open Agent Skills standard, so they work across compatible harnesses.
+
+Two things go wrong. The agent picks the wrong skill, or it picks the right one and skips steps. Clear descriptions that don't overlap fix most of the routing mistakes.
+
+Amazon MWAA also ships 4 agent skills (author, debug, test, upgrade) through the Agent Toolkit for AWS. It's the same SKILL.md idea, applied to Airflow workflows.
+
+Save this for your next agent refactor 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+Sources:
+https://aws.amazon.com/blogs/machine-learning/evaluate-skill-equipped-agents-with-strands-evals-and-amazon-bedrock-agentcore/
+https://agentskills.io/specification
+https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-mwaa-ai-agent-skills/
+
+#aiagents #agenticai #llm #aws #buildinpublic

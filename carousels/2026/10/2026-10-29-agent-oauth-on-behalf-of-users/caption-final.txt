@@ -1,0 +1,18 @@
+Giving your agent an admin token is the fastest way to build it, and the worst way to ship it. It should act with your user's access, nothing more 👇
+
+There are two halves. Inbound auth decides who can call the agent. Outbound auth decides what the agent can reach on that user's behalf.
+
+The user signs in and approves one provider, say GitHub. The token is stored for that user only, which is called session binding.
+
+From then on, every tool call runs with that user's permissions and nothing more.
+
+Use the smallest scopes that work, and give users a way to revoke access. And never paste tokens into prompts or logs.
+
+AWS added a managed Consent portal to AgentCore Identity for exactly this, aimed at agents used from Kiro, Claude Code, Cursor and VS Code. Tokens land in the AgentCore Identity token vault.
+
+Save this before your agent touches real accounts 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+Source: https://aws.amazon.com/blogs/machine-learning/manage-end-user-oauth-consent-for-ai-agents-with-amazon-bedrock-agentcore/
+
+#aiagents #oauth #aisecurity #aws #agenticai

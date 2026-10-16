@@ -1,0 +1,21 @@
+Splitting docs every N tokens works until it slices an idea in half. Smarter chunking splits by meaning instead. Chunking, part 2 👇
+
+Semantic chunking cuts where the topic changes, using embeddings to spot the shift.
+Hierarchical chunking retrieves small child chunks, then hands back their bigger parents for context.
+Contextual chunking adds a short "where this came from" note to each chunk before you embed it.
+
+It works like a textbook. You find the exact paragraph, then read the section around it.
+
+My advice: start simple. Upgrade only when your evals show wrong or partial chunks.
+
+Bedrock Knowledge Bases has SEMANTIC and HIERARCHICAL built in. Contextual retrieval uses chunkingStrategy NONE plus a custom Lambda that enriches each chunk.
+
+Save this for your next indexing job 🔖
+Follow @shivanshu_builds for the RAG series. Part 8 (reranking) is next.
+
+Sources:
+https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html
+https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_ChunkingConfiguration.html
+https://aws.amazon.com/blogs/machine-learning/contextual-retrieval-in-anthropic-using-amazon-bedrock-knowledge-bases/
+
+#ragseries #chunking #rag #genai #aws
