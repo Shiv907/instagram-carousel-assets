@@ -1,0 +1,6 @@
+Sources:
+MSRC advisory: https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-53773
+Embrace The Red write-up: https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/
+Persistent Security write-up: https://www.persistent-security.net/post/part-iii-vscode-copilot-wormable-command-execution-via-prompt-injection
+Bedrock Guardrails prompt attacks: https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-prompt-attack.html
+Policy in AgentCore: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy.html

@@ -1,0 +1,25 @@
+A hidden sentence in a README got an AI coding assistant to switch off its own safety switch. And it did.
+
+That's CVE-2025-53773, GitHub Copilot in Visual Studio / VS Code, as demonstrated by two researchers who found it independently (Johann Rehberger and Persistent Security).
+
+How it worked:
+→ 𝗣𝗹𝗮𝗻𝘁. An instruction hidden in a project file, like an HTML comment in a README.
+→ 𝗧𝗿𝗶𝗴𝗴𝗲𝗿. The developer asks something ordinary: "Review this code."
+→ 𝗦𝗲𝗹𝗳-𝗲𝗱𝗶𝘁. Agent mode could write workspace files without approval, so it added one auto-approve setting to its own settings file (the exact line is in the image).
+→ 𝗘𝘅𝗲𝗰𝘂𝘁𝗲. Every confirmation prompt was gone, and it ran terminal commands. The demos opened a calculator, which means any program could run.
+
+Microsoft rated it Important (CVSS 7.8) and patched it in August 2025. No in-the-wild exploitation is documented.
+
+The lesson outlives the patch. Two flaws combined:
+→ 𝗗𝗮𝘁𝗮 𝘄𝗮𝘀 𝘁𝗿𝗲𝗮𝘁𝗲𝗱 𝗮𝘀 𝗮 𝗰𝗼𝗺𝗺𝗮𝗻𝗱. A file the agent was asked to review became orders it followed.
+→ 𝗧𝗵𝗲 𝘀𝗮𝗳𝗲𝘁𝘆 𝗰𝗼𝗻𝘁𝗿𝗼𝗹 𝗹𝗶𝘃𝗲𝗱 𝘄𝗵𝗲𝗿𝗲 𝘁𝗵𝗲 𝗮𝗴𝗲𝗻𝘁 𝗰𝗼𝘂𝗹𝗱 𝘄𝗿𝗶𝘁𝗲. An approval the agent can switch off isn't a control.
+
+What I'd do on any agent stack:
+→ 𝗟𝗲𝗮𝘀𝘁 𝗽𝗿𝗶𝘃𝗶𝗹𝗲𝗴𝗲. A review task needs read access, not shell or config write.
+→ 𝗣𝗿𝗼𝘁𝗲𝗰𝘁 𝘁𝗵𝗲 𝗰𝗼𝗻𝘁𝗿𝗼𝗹 𝗽𝗹𝗮𝗻𝗲. Settings, allow-lists, tool and MCP configs, CI files: out of the agent's reach or behind a human-reviewed diff.
+→ 𝗘𝗻𝗳𝗼𝗿𝗰𝗲 𝗮𝗽𝗽𝗿𝗼𝘃𝗮𝗹𝘀 𝗼𝘂𝘁𝘀𝗶𝗱𝗲 𝘁𝗵𝗲 𝗺𝗼𝗱𝗲𝗹. On AWS that means scoped per-agent IAM roles and AgentCore Gateway + Policy (deterministic Cedar rules on every tool call).
+→ 𝗗𝗼𝗻'𝘁 𝗹𝗲𝗮𝗻 𝗼𝗻 𝗳𝗶𝗹𝘁𝗲𝗿𝘀 𝗮𝗹𝗼𝗻𝗲. Bedrock Guardrails' prompt attack filter does not evaluate tool results, which is exactly the channel this attack used.
+
+Can your agent edit the file that decides what it's allowed to do?
+
+#AIAgents #AISecurity #PromptInjection #AWS #GitHubCopilot
