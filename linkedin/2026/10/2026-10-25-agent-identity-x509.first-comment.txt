@@ -1,4 +1,4 @@
 Sources:
 AWS ML Blog, Securing AI agent identity with X.509 PKI on AWS (20 Oct 2026): https://aws.amazon.com/blogs/machine-learning/securing-ai-agent-identity-with-x-509-pki-on-aws/
-Keyfactor EJBCA: https://www.keyfactor.com/ejbca-software/
+Keyfactor EJBCA: https://www.keyfactor.com/products/ejbca-enterprise/
 MCP Specification: https://modelcontextprotocol.io/
