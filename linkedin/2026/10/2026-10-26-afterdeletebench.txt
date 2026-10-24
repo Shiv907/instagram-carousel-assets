@@ -1,0 +1,19 @@
+You deleted the memory. Your agent still knew the secret.
+
+That's the finding in 𝗔𝗳𝘁𝗲𝗿𝗗𝗲𝗹𝗲𝘁𝗲𝗕𝗲𝗻𝗰𝗵 (arXiv 2610.31366, 𝘂𝗻𝗿𝗲𝘃𝗶𝗲𝘄𝗲𝗱 𝗽𝗿𝗲𝗽𝗿𝗶𝗻𝘁). The paper audits whether deleting a source memory record also clears what the agent derived from it, such as summaries. The model weights never change.
+
+What they measured:
+→ On Qwen2.5-7B-Instruct, a single query recovered the deleted secret in 𝗿𝗼𝘂𝗴𝗵𝗹𝘆 𝘁𝘄𝗼 𝘁𝗵𝗶𝗿𝗱𝘀 of cases. Matched agents that were never shown the secret recovered 𝘇𝗲𝗿𝗼.
+→ Recovery did not need a surviving verbatim copy. When the full secret string was gone and only separately stored components remained under a public composition rule, exact reconstruction still succeeded in 62–99% of cases across Qwen, Mistral, and Phi-3.
+→ A provenance-aware closure (retire or rebuild every summary that named the deleted source) brought observed recovery to 𝘇𝗲𝗿𝗼 in the tested settings.
+→ An exact-literal write filter blocked putting the secret back, but it 𝗰𝗼𝘂𝗹𝗱 𝗻𝗼𝘁 𝗲𝗿𝗮𝘀𝗲 what was already stored.
+
+The point for builders: source deletion is a storage operation. Forgetting is a behavioral one. If your agent builds summaries, embeddings, or derived state from memory, deleting the original row is not enough.
+
+Treat this as an early research signal, not a settled result. It's a preprint and has not been peer-reviewed.
+
+Source in the first comment.
+
+When a user hits delete in your agent, what else still holds a copy?
+
+#AIAgents #AIMemory #Privacy #LLMAgents #MachineUnlearning

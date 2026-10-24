@@ -1,0 +1,21 @@
+Your agent called the database. Can you prove which agent it was?
+
+OAuth tokens passed down an agent chain don't answer that. They can be replayed, shared, or forged between agents. AWS's reference architecture for AI agent identity uses 𝗫.509 𝗣𝗞𝗜 instead, with Keyfactor EJBCA on AWS.
+
+What it adds on top of a login token:
+→ 𝗦𝗶𝗴𝗻𝗲𝗱 𝗲𝗻𝘃𝗲𝗹𝗼𝗽𝗲𝘀. Every agent-to-agent call is signed with the caller's private key (proof-of-possession), plus a nonce and a short freshness window so replay fails.
+→ 𝗨𝘀𝗲𝗿-𝘀𝗶𝗴𝗻𝗲𝗱 𝗱𝗲𝗹𝗲𝗴𝗮𝘁𝗶𝗼𝗻. The user authorizes specific agent certificates without handing over their private key or full-session token.
+→ 𝗔𝘂𝗱𝗶𝗲𝗻𝗰𝗲-𝘀𝗰𝗼𝗽𝗲𝗱 𝘁𝗼𝗸𝗲𝗻𝘀 (RFC 8693). A downscoped token is accepted only by the MCP tool server it's meant for.
+→ 𝗥𝗲𝗮𝗹-𝘁𝗶𝗺𝗲 𝗢𝗖𝗦𝗣. Revoke one user certificate and every downstream agent authority ends immediately.
+
+MCP connects agents to tools, but it has no built-in auth standard. This stack fills that gap: user → agent → tool, with a fail-closed check on every hop.
+
+Private keys stay local. EJBCA never sees them. Agents prove authority through a cryptographic chain, not by holding the user's credentials.
+
+If you can't revoke one agent without rotating shared secrets everywhere, you don't have agent identity yet. You have a shared password.
+
+Source in the first comment.
+
+Which agent in your stack can you revoke in under a minute?
+
+#AIAgents #AISecurity #X509 #AWS #MCP #ZeroTrust
