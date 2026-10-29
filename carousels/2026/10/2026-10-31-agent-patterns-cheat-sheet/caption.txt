@@ -1,0 +1,14 @@
+8 agent design patterns, one diagram each 👇
+
+→ Tool-use loop, prompt chain and router: the ones most products need
+→ Parallel fan-out and reflection: for speed and for quality
+→ Plan and execute, and supervisor-worker: for long, multi-step work
+→ Human checkpoint: before anything you can't undo
+
+Start with the tool-use loop. Add patterns only when a real problem asks for them.
+
+Comment PATTERNS and I'll send you the full cheat sheet with links.
+Save this for your next design review 🔖
+Follow @shivanshu_builds for practical agent engineering resources.
+
+#aiagents #agenticai #softwarearchitecture #llm #developers

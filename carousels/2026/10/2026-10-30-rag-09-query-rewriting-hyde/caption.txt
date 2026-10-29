@@ -1,0 +1,16 @@
+Users ask messy questions. Rewrite them before you search. Part 9 of the RAG series 👇
+
+→ Query rewriting: turn "what about India?" into a full, standalone search query
+→ Multi-query: search with a few different wordings, then merge the results
+→ Query decomposition: split a two-part question into two searches (built into Bedrock Knowledge Bases)
+→ HyDE: have the LLM draft a quick answer, then search with that draft
+→ Each trick costs an extra LLM call, so log both the original and the rewritten query
+
+Like a librarian who figures out which book you mean before walking to the shelf.
+
+Save this for your next RAG upgrade 🔖
+Follow @shivanshu_builds for the RAG series. Part 10 (metadata filtering) is on Monday.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html
+
+#ragseries #rag #genai #llm #aws
