@@ -1,0 +1,22 @@
+Your users don't type clean search queries. They type "what about India?" and expect your RAG app to get it. Part 9 of the RAG series 👇
+
+I've stopped sending the raw question straight to the vector search. Rewrite it first.
+
+Query rewriting turns "what about India?" into a full, standalone query your retriever can actually use.
+
+Multi-query searches with a few different wordings, then merges the results.
+
+Query decomposition splits a two-part question into two searches. Bedrock Knowledge Bases has this built in.
+
+HyDE is my favourite trick here. Let the LLM draft a quick answer first, then search with that draft.
+
+One honest catch: every one of these costs an extra LLM call. So log the original query next to the rewritten one, or you'll never know which helped.
+
+Think of a good librarian. They figure out which book you mean before walking to the shelf.
+
+Save this for your next RAG upgrade 🔖 And tell me in the comments which one you'd try first.
+Follow @shivanshu_builds for the RAG series. Part 10 (metadata filtering) is on Monday.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html
+
+#ragseries #rag #genai #llm #aws

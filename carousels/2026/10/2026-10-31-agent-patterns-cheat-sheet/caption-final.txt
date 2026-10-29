@@ -1,0 +1,17 @@
+Most agent projects I see don't need a fancy multi-agent setup. They need the right pattern. Here are 8, one diagram each 👇
+
+Tool-use loop, prompt chain and router. These cover what most products actually need.
+
+Parallel fan-out and reflection. One is for speed, the other for quality.
+
+Plan and execute, and supervisor-worker. Reach for these on long, multi-step work.
+
+Human checkpoint. Put it before anything you can't undo.
+
+My rule: start with the tool-use loop. Add a pattern only when a real problem asks for it.
+
+Comment PATTERNS and I'll send you the full cheat sheet with links.
+Save this for your next design review 🔖
+Follow @shivanshu_builds for practical agent engineering.
+
+#aiagents #agenticai #softwarearchitecture #llm #developers
