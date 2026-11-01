@@ -1,0 +1,16 @@
+Your agent is allowed to call the tool. Should it see every row that tool can return? 👇
+
+→ IAM and OAuth decide whether the agent can call a tool, not which data comes back
+→ Guardrails filter the answer, but by then the data is already in the model's context
+→ Enforce access where the data comes from: only the rows and columns this user may see
+→ Multiple policies merge most-restrictive-wins: more policies can only mean less visible data
+→ AWS open-sourced TOLAP (Apache-2.0): a policy schema plus SDKs for .NET, Python and TypeScript
+
+TOLAP only protects the paths it wraps. A direct database connection skips it, so close those paths too.
+
+Save this before your agent touches sensitive data 🔖
+Follow @shivanshu_builds for practical agent engineering, one carousel a day.
+
+Source: https://aws.amazon.com/blogs/opensource/introducing-tolap-object-level-access-control-for-ai-agent-tools/
+
+#aisecurity #aiagents #agenticai #aws #opensource
