@@ -1,0 +1,21 @@
+Filter first, then search. Part 10 of my RAG series, and honestly one of the most underrated fixes 👇
+
+Metadata is just labels on each chunk: year, country, department, product, who can see it.
+
+Filter on those labels first, so the vector search only returns chunks that match.
+
+That's what stops "2026 leave policy for India" from pulling up the 2023 US policy. Similar text, wrong answer.
+
+Bedrock Knowledge Bases lets you set filters per query, and it can even build them from the question itself.
+
+My favourite use: permissions. Only search the chunks this user is allowed to see.
+
+Think of it like ticking size and price on a shopping site before you start browsing.
+
+Save this for your next RAG build 🔖
+What would you filter on first in your docs? Tell me below.
+Follow @shivanshu_builds for the RAG series. Part 11 is coming soon.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html
+
+#ragseries #rag #genai #aws
