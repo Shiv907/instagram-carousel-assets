@@ -1,0 +1,16 @@
+Filter first, then search. That's metadata filtering, part 10 of the RAG series 👇
+
+→ Metadata is labels on each chunk: year, country, department, product, who can see it
+→ Filter on those labels, so the vector search only returns chunks that match
+→ It stops "2026 leave policy for India" from returning the 2023 US policy
+→ Bedrock Knowledge Bases supports filters per query, and can even build them from the question
+→ Use the same idea for permissions: only search chunks this user is allowed to see
+
+Like ticking size and price on a shopping site before you browse.
+
+Save this for your next RAG build 🔖
+Follow @shivanshu_builds for the RAG series. Part 11 is coming soon.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html
+
+#ragseries #rag #genai #aws
