@@ -1,0 +1,20 @@
+You probably don't need 5 agents. Here's how I'd tell when multi-agent is actually worth it 👇
+
+First, the cost nobody mentions. A tool call is fast and cheap. A sub-agent is a whole LLM loop, and it costs you time and tokens.
+
+If you do split the work, match the pattern to the task.
+Supervisor-worker fits tasks that break down cleanly.
+Pipelines fit work that flows in stages.
+Swarms need a convergence rule and a token budget, or they just never stop.
+
+And every handoff needs a timeout and a fallback. No exceptions.
+
+My rule: start with one agent and good tools. Promote a tool to a sub-agent only when it clearly needs its own reasoning.
+
+Save this for your next architecture review 🔖
+How many agents are in your current setup? Tell me below.
+Follow @shivanshu_builds for practical agent engineering.
+
+Source: https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentperf05-bp02.html
+
+#multiagent #aiagents #agenticai #softwarearchitecture #aws
