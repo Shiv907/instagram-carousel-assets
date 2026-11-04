@@ -1,6 +1,6 @@
 Your agent has the user's token. So how does it call the next API as that same user, not as itself? Part 2 of agent OAuth 👇
 
-This is the bug I see people ship without noticing. Without identity propagation, calls land as the app, not the user. Your audit trail breaks and user-level permissions quietly get bypassed.
+This one is easy to ship without noticing. Without identity propagation, calls land as the app, not the user. Your audit trail breaks and user-level permissions quietly get bypassed.
 
 The fix is on-behalf-of (OBO) token exchange. You swap the inbound user token for a new one scoped to the downstream API, and the user's identity stays attached.
 
