@@ -1,0 +1,16 @@
+Agentic RAG: instead of searching once, the model decides how to search. Part 12 of the RAG series 👇
+
+→ It breaks a complex question into smaller sub-questions
+→ It searches, checks whether it has enough, and searches again if not
+→ Retrieval becomes a tool inside the agent loop, next to your other tools
+→ Amazon Bedrock Knowledge Bases does this with agentic retrieval (the AgenticRetrieveStream API)
+→ The price: more LLM calls, so set a max iteration count and read the traces
+
+A search box answers what you typed. A research assistant figures out what to look up.
+
+Save this for your next RAG build 🔖
+Follow @shivanshu_builds for the RAG series. GraphRAG is coming up next.
+
+Source: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-agentic-retrieve.html
+
+#ragseries #agenticrag #rag #aiagents #aws

@@ -1,0 +1,20 @@
+Part 2 of agent OAuth: your agent already has the user's token. How does it call the next API as that same user? 👇
+
+→ Without identity propagation, API calls arrive as the app, not the user. Audit trails break and user-level permissions get bypassed
+→ On-behalf-of (OBO) token exchange swaps the inbound user token for a new token scoped to the downstream API, with the user's identity kept
+→ AgentCore Identity brokers the exchange with your IdP (RFC 8693 token exchange or RFC 7523 JWT grant), so your agent code never handles client secrets
+→ AgentCore Gateway can now do it natively on a target: no custom Lambda interceptor
+→ In AWS's ServiceNow + Entra ID example, ServiceNow resolves the user from the exchanged token and applies that user's permissions
+
+Two settings people miss: the gateway must be created with MCP version 2025-11-25, and Entra needs requested_token_use=on_behalf_of or the exchange fails.
+
+Part 1 (consent + token vault) is on my profile.
+
+Save this for your next enterprise agent 🔖
+Follow @shivanshu_builds for practical agent engineering.
+
+Sources:
+https://aws.amazon.com/blogs/machine-learning/servicenow-on-behalf-of-token-exchange-with-bedrock-agentcore-gateway/
+https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/on-behalf-of-token-exchange.html
+
+#aiagents #oauth #agenticai #aws #appsec
