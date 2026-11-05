@@ -1,6 +1,6 @@
 Your LLM judge doesn't need to read every single turn. Let a calibrated model screen them first 👇
 
-Here's the idea. A decision model is a small, specialized model that picks from a fixed set of answers and gives you a calibrated probability, not free-form text. It handles three question types: yes/no, choice (up to 255 options) and score (2 to 10 ordered levels).
+Here's the idea. A decision model is a small, specialized model that picks from a fixed set of answers and gives you a calibrated probability, not free-form text. It handles three question types: yes/no (noul), choice (up to 255 options) and score (2 to 10 ordered levels).
 
 In AgentCore Evaluations it plugs in as a code-based evaluator. A Lambda gets the agent's OpenTelemetry spans, calls the model, and returns a label and a value.
 
