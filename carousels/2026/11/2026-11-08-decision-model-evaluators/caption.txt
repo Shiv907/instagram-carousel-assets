@@ -1,0 +1,21 @@
+Your LLM judge doesn't need to read every turn. Let a calibrated model screen them first 👇
+
+→ A decision model is a small, specialized model that picks from a fixed set of answers and returns a calibrated probability, not free-form text
+→ Three question types: yes/no (noul), choice (up to 255 options), score (2 to 10 ordered levels)
+→ In AgentCore Evaluations it plugs in as a code-based evaluator: a Lambda gets the agent's OpenTelemetry spans, calls the model, returns a label + value
+→ The cascade: screen every turn with the decision model, escalate only the turns below your threshold to the built-in LLM evaluators for an explanation
+→ LLM as judge: score + explanation in 2–10 s. Decision model: calibrated probability in ~hundreds of ms
+
+Before you gate a release on it, validate on your own traffic: 3 human labelers, majority vote, then check agreement, calibration and disagreements. Pick a threshold per evaluator instead of defaulting to 0.5.
+
+The ECE numbers on slide 7 are illustrative, so you can check the maths yourself.
+
+Save this for your next eval pipeline 🔖 and share it with whoever owns your agent evals.
+Follow @shivanshu_builds for practical agent engineering.
+
+Sources:
+https://aws.amazon.com/blogs/machine-learning/use-decision-models-with-amazon-bedrock-agentcore-evaluations/
+https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/code-based-evaluators.html
+ECE: https://arxiv.org/abs/1706.04599
+
+#aiagents #agenticai #llmevaluation #aws #machinelearning
