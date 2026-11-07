@@ -1,0 +1,24 @@
+A bigger context window isn't my first fix for an agent that keeps running out of context.
+
+In AWS's Deep Insight example, a data-analysis task can use more than 150K tokens in about 15 minutes. A 200K window doesn't feel so big then.
+
+What I like about their approach is that it isn't just a better prompt. Deep Insight is open source, built on Strands Agents SDK and Amazon Bedrock AgentCore, and uses four layers:
+
+1. Separate the contexts. Each agent gets its own. Compressed clues go back through shared_state instead of dragging every conversation along. AWS says even the Coder stays under 25K tokens.
+
+2. Budget the output. Give each agent an output limit and a standard response format. Make scripts self-contained so old code doesn't have to stay in context.
+
+3. Keep the work in files. Their write_and_execute_tool saves code to files and returns roughly three lines. AWS reports about 95% fewer tokens per script in its example. Results, calculation metadata and citations pass between agents as files. Skills load on demand from a roughly 500-token catalog instead of 20K+ tokens of guides.
+
+4. Check the work. The Validator re-runs calculations. The Auditor checks the final DOCX read-only, with up to two targeted Reporter retries. On overflow, their conversation manager summarizes the oldest 50% and keeps the last 10 messages. Prompt caching is only on for agents that repeat the same prompt.
+
+These are details from AWS's implementation, not results I've reproduced.
+
+My takeaway: decide what each agent needs to see, what belongs in a file, and who checks the result. Then look at the context window.
+
+Which layer is your agent missing? Tell me below, and save this for your next long-running agent build.
+
+Source:
+https://aws.amazon.com/blogs/machine-learning/four-layers-of-context-engineering-for-production-ai-agents-how-deep-insight-applies-them-in-working-code/
+
+#aiagents #agenticai #contextengineering #aws #strandsagents
