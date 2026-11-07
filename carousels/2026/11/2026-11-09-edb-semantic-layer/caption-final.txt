@@ -1,0 +1,24 @@
+I wouldn't trust a system prompt to protect a database column. That's what permissions are for 👇
+
+A SQL agent needs two things: the right meaning and the right access. One doesn't replace the other.
+
+In the AWS + EDB example, purchases.price means the order total, not the unit price. Get that wrong and the top customer's total comes back as $502,529 instead of $27,991.66. Those are the example's numbers, not my results.
+
+SemKB, part of EDB AIDB, keeps business meaning inside operational Postgres. Comments describe the data, foreign keys map join paths, and views and semantic aliases hold certified definitions.
+
+The AIDB tools reach the agent through EDB's MCP endpoint, registered on AgentCore Gateway. AgentCore Identity injects the Postgres credential as Basic auth, so agent code doesn't see it.
+
+Here's the bit I'd pay attention to. Same prompt, same SemKB, same tools. Change the database role from mcp_agent_full to mcp_agent_restricted, with access to customers.ssn withheld, and the restricted role gets permission denied for that column.
+
+The prompt didn't enforce that. Postgres did.
+
+For this external AgentCore path, enforce access with Postgres GRANT, row-level security and column grants. MCP doesn't add an access-control layer of its own. Audit external agents in aidb_otel. AIDB purposes apply to the in-database agent path, not this one.
+
+Save this for your next data agent 🔖 and share it with whoever owns your Postgres roles.
+Follow @shivanshu_builds for practical agent engineering.
+
+Sources:
+https://aws.amazon.com/blogs/machine-learning/build-a-semantic-layer-for-agentic-ai-with-edb-postgres-ai-and-amazon-bedrock-agentcore/
+https://www.enterprisedb.com/docs/aidb/latest/mcp-endpoint
+
+#aiagents #agenticai #postgres #aws #bedrock
