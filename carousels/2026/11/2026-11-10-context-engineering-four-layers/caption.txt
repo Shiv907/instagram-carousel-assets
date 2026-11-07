@@ -1,0 +1,15 @@
+A 200K-token context window sounds huge. A real data-analysis task can burn past 150K of it in about 15 minutes.
+
+AWS's Deep Insight team (open source, built on Strands Agents SDK + Amazon Bedrock AgentCore) stacks four layers of context engineering, each one catching what the layer before it misses:
+
+1. Architecture: every agent gets its own context. Only compressed clues go back through shared_state (messages, clues, full_plan, history). Even the Coder stays under 25K tokens.
+2. Prompts: per-agent output budgets (Coder 1,000-1,500, Validator 800, Reporter 1,000 tokens), one standard response format, and self-contained scripts so old code can leave context.
+3. Tools and files: write_and_execute_tool keeps code in files and returns a ~3-line summary (about 95% fewer tokens per script in their example). all_results.txt, calculation_metadata.json and citations.json act as the bus between agents. Skills load on demand: ~500-token catalog instead of 20K+ of guides (about 97% less).
+4. Verification: Validator re-runs calculations (tolerance 0.01), Auditor checks the final DOCX read-only with up to two targeted Reporter retries, SummarizingConversationManager summarizes the oldest 50% on overflow and keeps the last 10 messages, and prompt caching is switched on only for agents that repeat the same prompt.
+
+Which layer is your agent missing? Tell me in the comments, and save this for your next long-running agent build.
+
+Source:
+https://aws.amazon.com/blogs/machine-learning/four-layers-of-context-engineering-for-production-ai-agents-how-deep-insight-applies-them-in-working-code/
+
+#aiagents #agenticai #contextengineering #aws #strandsagents
