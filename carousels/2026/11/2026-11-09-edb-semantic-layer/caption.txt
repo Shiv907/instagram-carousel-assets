@@ -1,0 +1,17 @@
+Your SQL agent needs a meaning layer. Governance is GRANT, not a system prompt 👇
+
+→ SemKB (AIDB) lives inside operational Postgres: COMMENT ON holds business meaning, foreign keys crawl join paths, views and semantic aliases hold certified definitions
+→ Schema-in-the-prompt fails on meaning: purchases.price is the order total, not unit price — misreading it returns $502,529 for the top customer instead of $27,991.66
+→ Expose the AIDB tool catalog through the EDB MCP endpoint (ALB → edb-endpoints), registered as an MCP target on AgentCore Gateway
+→ AgentCore Identity injects the Postgres credential as Basic auth — agent code never sees it
+→ Same prompt, SemKB, and tools; two roles (mcp_agent_full vs mcp_agent_restricted with customers.ssn withheld) → restricted gets permission denied for column ssn
+→ MCP has no ACL of its own: Postgres GRANT + RLS decide. Audit external agents in aidb_otel. AIDB purposes are for the in-database agent path, not this external AgentCore path
+
+Save this for your next data agent 🔖 and share it with whoever owns your Postgres roles.
+Follow @shivanshu_builds for practical agent engineering.
+
+Sources:
+https://aws.amazon.com/blogs/machine-learning/build-a-semantic-layer-for-agentic-ai-with-edb-postgres-ai-and-amazon-bedrock-agentcore/
+https://www.enterprisedb.com/docs/aidb/latest/mcp-endpoint
+
+#aiagents #agenticai #postgres #aws #bedrock
