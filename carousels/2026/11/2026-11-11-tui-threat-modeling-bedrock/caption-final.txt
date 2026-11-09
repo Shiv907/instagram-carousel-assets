@@ -1,0 +1,22 @@
+Four security engineers. Over 100 product teams. Manual threat modeling was the bottleneck.
+
+This is TUI's story, and it's one of the more honest agent builds I've read this year. They did a 10-week PoC with the AWS Generative AI Innovation Center, then took it to production in 30 days. It extends AWS Threat Designer with TUI's own standards, runs on Amazon Bedrock AgentCore runtime, and uses Claude Sonnet 4.5 on Amazon Bedrock.
+
+The part I liked most is that they didn't just throw everything into the prompt.
+
+1. Pick the standards, don't stuff them. All 192 standards (338 KB) didn't fit. So the model reads lightweight metadata and picks the 16 most relevant, about 21 KB. That's a 94% cut.
+
+2. Make the agent check itself. It's a ReAct loop in LangGraph with tools to add, delete and read threats, plus gap analysis. After 3 generation calls it's forced to look for gaps. It can't finish until the catalog isn't empty, all 6 STRIDE categories are covered, and gap analysis has run at least once.
+
+3. Search, but carefully. It looks up current issues from sources like OWASP, NIST and CWE, with a 7-day S3 cache. Only technology names go out, never the architecture or customer data.
+
+4. Keep humans in the loop. Engineers can upload their own assessment as a PDF. Threats get matched by semantic similarity, and severity disagreements get flagged.
+
+TUI's production numbers, per the AWS blog: up to 70% less time per assessment, 10–12 sessions a month instead of 3–4, and 40–60 threats per architecture vs 30–40 manually. As of Oct 2026 they report 255 registered users, 86 threat models and 43 active creators. These are TUI's numbers, not mine.
+
+Which of these would you steal first for your security workflow? Tell me in the comments, and save this for your next agentic security build.
+
+Source:
+https://aws.amazon.com/blogs/architecture/how-tui-scales-threat-modeling-for-100-teams-with-amazon-bedrock/
+
+#aiagents #agenticai #threatmodeling #aws #bedrock
