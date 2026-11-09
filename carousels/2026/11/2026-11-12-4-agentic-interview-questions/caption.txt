@@ -1,0 +1,23 @@
+Most agent interviews don't ask you to recite a framework. They ask how you recover when a tool fails, when a human must approve a write, when the tool list gets huge, and how you pick a decoding strategy.
+
+I pulled 4 real questions from a public GitHub company-wise list (company attribution unverified) and wrote our model answers: what the interviewer is checking, plus a strong outline.
+
+Exact questions:
+1) How do you handle tool-call errors, timeouts and retries in an agentic loop?
+2) Design human-in-the-loop approval for an agent that takes consequential actions.
+3) How many tools is too many? How do you design tool schemas an LLM can actually use correctly?
+4) Compare greedy, beam search, top-k, top-p and temperature sampling. When does each fail?
+
+Which one would trip you up? Tell me in the comments, and save this before your next agent interview.
+
+Sources:
+Questions: https://github.com/pallavi-shekhar/ai-engineering-interview-questions-company-wise
+AWS Well-Architected Agentic AI Lens AGENTREL07-BP02: https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentrel07-bp02.html
+Ambient agents + HITL on AgentCore: https://aws.amazon.com/blogs/machine-learning/building-ambient-agents-with-amazon-bedrock-agentcore-from-event-driven-signals-to-human-in-the-loop-workflows/
+Bayer ADE tool surface on AgentCore: https://aws.amazon.com/blogs/machine-learning/how-bayer-crop-science-built-an-agentic-decision-engine-on-amazon-bedrock-agentcore-with-aws-unified-operations/
+Hugging Face generation strategies: https://huggingface.co/docs/transformers/generation_strategies
+Hugging Face GenerationConfig: https://huggingface.co/docs/transformers/main_classes/text_generation
+
+#aiagents #agenticai #interviewprep #llm #aiengineering
+
+#aiagents #agenticai #interviewprep #llm #aiengineering
