@@ -1,0 +1,18 @@
+Four security engineers. Over 100 product teams. Manual threat modeling was the bottleneck.
+
+TUI (travel + tourism) worked with the AWS Generative AI Innovation Center on a 10-week PoC, then took the system to production in 30 days. It extends AWS Threat Designer with TUI-specific standards, runs on Amazon Bedrock AgentCore runtime, and uses Claude Sonnet 4.5 on Amazon Bedrock.
+
+What actually made it scale:
+→ Metadata-driven selection: 192 standards (338 KB) collapsed to the 16 most relevant (~21 KB, a 94% cut) instead of stuffing the whole corpus into the prompt
+→ Self-correcting ReAct loop (LangGraph): add / delete / read threats + gap analysis; after 3 generation calls the agent is forced to review gaps; validation requires a non-empty catalog, all 6 STRIDE categories, and at least one gap analysis
+→ Web search for current intel (OWASP / NIST / CWE) with a 7-day S3 cache — only technology names go out, never architecture or customer data
+→ Optional SME comparison: upload a human PDF, match threats by semantic similarity, flag severity disagreements
+
+Production numbers from TUI (blog, Oct 2026): up to 70% less time per assessment, 10–12 sessions/month (was 3–4), 40–60 threats vs 30–40 manual, 100% consistent standards application. As of Oct 2026: 255 registered users, 86 threat models, 43 active creators.
+
+Which part would you steal first for your security workflow? Tell me in the comments, and save this for your next agentic security build.
+
+Source:
+https://aws.amazon.com/blogs/architecture/how-tui-scales-threat-modeling-for-100-teams-with-amazon-bedrock/
+
+#aiagents #agenticai #threatmodeling #aws #bedrock

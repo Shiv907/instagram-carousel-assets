@@ -1,0 +1,228 @@
+{
+ "title": "How TUI scales threat modeling for 100+ teams with Amazon Bedrock",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "Threat modeling",
+ "slug": "2026-11-11-tui-threat-modeling-bedrock",
+ "caption": "Four security engineers. Over 100 product teams. Manual threat modeling was the bottleneck.\n\nTUI (travel + tourism) worked with the AWS Generative AI Innovation Center on a 10-week PoC, then took the system to production in 30 days. It extends AWS Threat Designer with TUI-specific standards, runs on Amazon Bedrock AgentCore runtime, and uses Claude Sonnet 4.5 on Amazon Bedrock.\n\nWhat actually made it scale:\n\u2192 Metadata-driven selection: 192 standards (338 KB) collapsed to the 16 most relevant (~21 KB, a 94% cut) instead of stuffing the whole corpus into the prompt\n\u2192 Self-correcting ReAct loop (LangGraph): add / delete / read threats + gap analysis; after 3 generation calls the agent is forced to review gaps; validation requires a non-empty catalog, all 6 STRIDE categories, and at least one gap analysis\n\u2192 Web search for current intel (OWASP / NIST / CWE) with a 7-day S3 cache \u2014 only technology names go out, never architecture or customer data\n\u2192 Optional SME comparison: upload a human PDF, match threats by semantic similarity, flag severity disagreements\n\nProduction numbers from TUI (blog, Oct 2026): up to 70% less time per assessment, 10\u201312 sessions/month (was 3\u20134), 40\u201360 threats vs 30\u201340 manual, 100% consistent standards application. As of Oct 2026: 255 registered users, 86 threat models, 43 active creators.\n\nWhich part would you steal first for your security workflow? Tell me in the comments, and save this for your next agentic security build.\n\nSource:\nhttps://aws.amazon.com/blogs/architecture/how-tui-scales-threat-modeling-for-100-teams-with-amazon-bedrock/",
+ "hashtags": [
+  "aiagents",
+  "agenticai",
+  "threatmodeling",
+  "aws",
+  "bedrock"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "nodes",
+   "kicker": "Threat modeling",
+   "headline": "4 security engineers. ==100+ teams.==",
+   "sub": "How TUI made threat modeling mandatory with Amazon Bedrock + AgentCore.",
+   "chips": [
+    "Bedrock",
+    "AgentCore",
+    "STRIDE"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Manual review ==couldn't keep up==",
+   "paragraphs": [
+    "Each session took **4\u20136 hours**: diagrams, STRIDE threats, TUI / P&E standards, ISO 27001, then Confluence + Jira.",
+    "Only **3\u20134 sessions per month**. Most of the **100+** product teams waited weeks."
+   ],
+   "callout": "Threat modeling had to become mandatory \u2014 not a luxury."
+  },
+  {
+   "layout": "flow",
+   "title": "Architecture on ==Bedrock + AgentCore==",
+   "nodes": [
+    {
+     "label": "Amplify + Cognito",
+     "sub": "React UI, ~2 min setup",
+     "edge": "API Gateway"
+    },
+    {
+     "label": "Lambda + LangGraph",
+     "sub": "orchestrates the workflow",
+     "edge": "AgentCore runtime"
+    },
+    {
+     "label": "AgentCore runtime",
+     "sub": "containerized agent, session isolation",
+     "highlight": true,
+     "edge": "Claude Sonnet 4.5"
+    },
+    {
+     "label": "Amazon Bedrock",
+     "sub": "extended thinking 24K\u201364K"
+    }
+   ],
+   "after": "DynamoDB = resume-able state. S3 = diagrams + standards + search cache. Region: ==eu-central-1==."
+  },
+  {
+   "layout": "comparison",
+   "title": "Don't load ==all 192 standards==",
+   "columns": [
+    "Brute force",
+    "Metadata"
+   ],
+   "highlight": "Metadata",
+   "label_width": 180,
+   "rows": [
+    {
+     "label": "Context",
+     "values": [
+      "338 KB all docs",
+      "~21 KB (16 picks)"
+     ]
+    },
+    {
+     "label": "Input",
+     "values": [
+      "full dump",
+      "60 KB meta \u2192 top 16"
+     ]
+    },
+    {
+     "label": "Result",
+     "values": [
+      "token limit fail",
+      "94% less context"
+     ]
+    },
+    {
+     "label": "Vs RAG",
+     "values": [
+      "n/a",
+      "more predictable"
+     ]
+    }
+   ],
+   "foot": "Keywords + STRIDE tags + relevance scores beat stuffing the prompt."
+  },
+  {
+   "layout": "steps-cycle",
+   "title": "Self-correcting ==ReAct== threat loop",
+   "steps": [
+    {
+     "title": "Generate",
+     "text": "STRIDE threats: title, component, vector, likelihood, impact"
+    },
+    {
+     "title": "Tool calls",
+     "text": "add / delete / read catalog \u2014 agent picks the order"
+    },
+    {
+     "title": "Gap analysis",
+     "text": "forced after 3 generation calls (tool budget)"
+    },
+    {
+     "title": "Validate",
+     "text": "non-empty + all 6 STRIDE + \u22651 gap pass"
+    }
+   ],
+   "foot": "LangGraph subgraph. Mitigations use ==TUI-approved tools== + ISO 27001 mappings."
+  },
+  {
+   "layout": "cards",
+   "style": "grid",
+   "title": "Current intel, ==without leaking==",
+   "cards": [
+    {
+     "title": "2 queries / tech",
+     "text": "known issues + hardening (OWASP, NIST, CWE)"
+    },
+    {
+     "title": "S3 cache, 7-day TTL",
+     "text": "70\u201380% hits; <100 ms vs 2\u20133 s"
+    },
+    {
+     "title": "Cache key = names",
+     "text": "hash of sorted component names"
+    },
+    {
+     "title": "Never sent out",
+     "text": "no architecture or customer data"
+    }
+   ],
+   "foot": "Only technology ==component names== hit external search."
+  },
+  {
+   "layout": "cards",
+   "style": "stack",
+   "tone": "warn",
+   "title": "Humans stay ==in the loop==",
+   "cards": [
+    {
+     "title": "Optional SME node",
+     "text": "upload a manual PDF assessment; Claude extracts threats"
+    },
+    {
+     "title": "Normalize + match",
+     "text": "ratings \u2192 LOW/MEDIUM/HIGH/CRITICAL; semantic match AI \u2194 SME"
+    },
+    {
+     "title": "Flag disagreements",
+     "text": "both ratings + SME rationale; engineers own the final model"
+    }
+   ],
+   "foot": "Blog example: credential stuffing \u2014 AI HIGH, SME MEDIUM."
+  },
+  {
+   "layout": "comparison",
+   "title": "What changed in ==production==",
+   "columns": [
+    "Before",
+    "After"
+   ],
+   "highlight": "After",
+   "label_width": 220,
+   "rows": [
+    {
+     "label": "Time / assessment",
+     "values": [
+      "4\u20136 hours",
+      "up to 70% less*"
+     ]
+    },
+    {
+     "label": "Sessions / month",
+     "values": [
+      "3\u20134",
+      "10\u201312 (\u2248300%*)"
+     ]
+    },
+    {
+     "label": "Threats found",
+     "values": [
+      "30\u201340",
+      "40\u201360 / architecture"
+     ]
+    },
+    {
+     "label": "Standards applied",
+     "values": [
+      "varies by engineer",
+      "100% consistent"
+     ]
+    }
+   ],
+   "foot": "*TUI internal measurements (AWS Architecture blog). Oct 2026: 255 users, 86 models, 43 creators."
+  },
+  {
+   "layout": "recap",
+   "lhs": "Mandatory threat modeling",
+   "terms": [
+    "select context",
+    "self-correct",
+    "human calibrate"
+   ],
+   "cta": [
+    "Extends AWS Threat Designer. 10-week PoC \u2192 live in 30 days.",
+    "Source: AWS Architecture blog \u2014 How TUI scales threat modeling for 100+ teams with Amazon Bedrock"
+   ]
+  }
+ ]
+}
