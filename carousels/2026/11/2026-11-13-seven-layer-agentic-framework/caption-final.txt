@@ -1,0 +1,20 @@
+Your agent demo works. Production is a different question.
+
+That gap is exactly what this AWS post is about. On 9 Nov they published a seven-layer reference architecture for taking multi-agent apps on Amazon Bedrock AgentCore from prototype to production. To be clear, it's vendor guidance, not a standard, and the services it names are examples you can swap.
+
+The seven layers, one per swipe:
+1. Data and Knowledge
+2. Model and Inference
+3. Orchestration
+4. Security and Guardrails
+5. Application
+6. Observability
+7. Agentic Operations
+
+The idea I liked most is stable contracts between layers. You can swap one technology without rebuilding everything around it.
+
+Which layer does your team skip first? Tell me in the comments, and save this as a checklist for your next agent design review.
+
+Source: https://aws.amazon.com/blogs/machine-learning/pluggable-agentic-ai-framework-a-seven-layer-composable-enterprise-agentic-ai-reference-architecture-on-amazon-bedrock-agentcore/
+
+#aiagents #agenticai #aws #bedrockagentcore #softwarearchitecture
