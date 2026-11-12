@@ -1,0 +1,20 @@
+A test fails in CI. Would you let an AI agent fix it on its own?
+
+I wouldn't, at least not without guardrails. That's why this TCS write-up stuck with me. They run an agentic test orchestrator in production for banking and insurance clients, and the self-repair loop is kept on a really short leash.
+
+Here's how the loop works:
+- It runs the generated test and classifies the failure first
+- Only code errors go to the fixing agent
+- Connectivity and auth errors never reach the fixer
+- Patches that are empty, add unexpected files or change file size wildly get rejected
+- Retries stop when the retry policy says stop
+
+That second point is the one most people skip. Not every red test is a code problem.
+
+TCS reports about 88% less effort on roughly 100 scenarios. That's their own internal benchmark, so I'd read it as a data point, not a promise.
+
+Save this for when you build your own repair loop. Which check would you add first? Tell me in the comments.
+
+Source: https://aws.amazon.com/blogs/machine-learning/how-tcs-built-an-agentic-test-orchestrator-with-amazon-bedrock-agentcore/
+
+#aiagents #agenticai #aws #bedrockagentcore #testautomation
