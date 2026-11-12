@@ -1,0 +1,142 @@
+{
+ "title": "How TCS keeps an AI test-fixing loop safe",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "AWS Customer Case",
+ "slug": "tcs-agentic-repair-loop",
+ "caption": "A test fails in CI. Do you let an AI agent fix it?\n\nTCS runs an agentic test orchestrator in production for banking and insurance clients, and the part I found most useful is how tightly it controls the self-repair loop.\n\nWhat the loop does:\n- Runs the generated test and classifies the failure\n- Sends only code errors to a fixing agent\n- Keeps connectivity and auth errors away from the fixer\n- Rejects patches that are empty, add unexpected files or change file size wildly\n- Stops retrying when the retry policy says so\n\nTCS reports about 88% less effort on roughly 100 scenarios. That is their own internal benchmark, so treat it as a data point, not a promise.\n\nSave this for when you design your own agent repair loop. Which check would you add first? Tell me in the comments.\n\nSource: https://aws.amazon.com/blogs/machine-learning/how-tcs-built-an-agentic-test-orchestrator-with-amazon-bedrock-agentcore/\n\n#aiagents #agenticai #aws #bedrockagentcore #testautomation",
+ "hashtags": [
+  "aiagents",
+  "agenticai",
+  "aws",
+  "bedrockagentcore",
+  "testautomation"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "loop",
+   "kicker": "TCS on AgentCore",
+   "headline": "Should an AI agent fix your ==failing tests?==",
+   "sub": "How TCS bounds the self-repair loop in its test orchestrator.",
+   "chips": [
+    "AgentCore",
+    "TCS case study"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "The loop sits after generation",
+   "paragraphs": [
+    "TCS's Agentic Test Orchestrator generates tests for banking and insurance clients, then an **execution agent** runs them.",
+    "That agent's job is a fixed workflow, written as a LangGraph state graph: fetch, execute, fix, save."
+   ],
+   "callout": "AgentCore Runtime hosts and isolates the agent.",
+   "kicker": "Context"
+  },
+  {
+   "layout": "steps-cycle",
+   "title": "The execution workflow",
+   "steps": [
+    {
+     "title": "Fetch",
+     "text": "Get project, detect framework"
+    },
+    {
+     "title": "Execute",
+     "text": "Run ECS task, parse logs"
+    },
+    {
+     "title": "Fix",
+     "text": "Code errors only, if retries remain"
+    },
+    {
+     "title": "Save",
+     "text": "Persist code, status, report"
+    }
+   ],
+   "foot": "A ==fixed step order== and a ==bounded retry loop==."
+  },
+  {
+   "layout": "text",
+   "title": "Why an explicit graph",
+   "paragraphs": [
+    "An explicit state graph gives a **fixed step order**, so the agent cannot wander.",
+    "The retry loop is **bounded** by a retry policy: when it says stop, the loop ends."
+   ],
+   "callout": "The model proposes fixes. The graph decides what happens next.",
+   "kicker": "Control"
+  },
+  {
+   "layout": "flow",
+   "title": "Classify before you fix",
+   "body": "Not every failure deserves a code change.",
+   "lanes": [
+    {
+     "label": "Code error",
+     "steps": [
+      "classify",
+      "fixing agent",
+      "re-run"
+     ],
+     "end": "retry",
+     "highlight": true
+    },
+    {
+     "label": "Env error",
+     "steps": [
+      "classify",
+      "skip fixer"
+     ],
+     "end": "report"
+    }
+   ],
+   "after": "Connectivity and auth failures are ==**never sent to the code fixer.**=="
+  },
+  {
+   "layout": "text",
+   "title": "The fixer gets a small brief",
+   "paragraphs": [
+    "The fixing agent receives a **constrained error context**, not the whole project.",
+    "It proposes a **targeted correction** for that one failure."
+   ],
+   "callout": "Narrow input makes narrow patches.",
+   "kicker": "Fix step"
+  },
+  {
+   "layout": "checklist",
+   "title": "Patch-shape checks",
+   "items": [
+    "Reject empty files",
+    "Reject unexpected new files",
+    "Reject extreme changes in file size",
+    "Anything rejected is not saved as a fix"
+   ],
+   "foot": "Cheap checks that catch a runaway ==rewrite.=="
+  },
+  {
+   "layout": "stat",
+   "kicker": "TCS internal benchmark",
+   "value": "88%",
+   "label": "less effort on about 100 test scenarios",
+   "context": "About 200 hours manual versus about 24 hours with the orchestrator. TCS ran this as a controlled internal benchmark. Results vary by workload.",
+   "source": "AWS Machine Learning Blog, 10 Nov 2026"
+  },
+  {
+   "layout": "cta",
+   "headline": "Which repair-loop check ==would you add?==",
+   "sub": "Case study from AWS and TCS. Numbers are TCS's own.",
+   "actions": [
+    {
+     "type": "save",
+     "text": "Keep it for your next agent design"
+    },
+    {
+     "type": "follow",
+     "text": "Agentic AI + AWS, every week"
+    }
+   ],
+   "handle_tagline": "Source: AWS Machine Learning Blog, 10 Nov 2026"
+  }
+ ]
+}

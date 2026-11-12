@@ -1,0 +1,18 @@
+You deploy a new tool on your MCP server on Monday. Does your agent registry know on Tuesday?
+
+AWS published a push-based way to keep AWS Agent Registry records fresh, so consumers stop reading stale tool schemas.
+
+The flow:
+CloudTrail sees UpdateAgentRuntime, EventBridge routes it, a Lambda calls tools/list on the server, diffs it against the record, and updates the record only if something changed.
+
+The part I like: the update drops the record back to Draft until a curator approves it, so automation cannot skip review.
+
+Know the limits before you copy it: it only updates records that are already APPROVED, and CloudTrail delivery takes about 5 to 15 minutes.
+
+Save this if you run MCP servers at scale. Does your team review catalog changes today? Tell me in the comments.
+
+Source: https://aws.amazon.com/blogs/machine-learning/automating-aws-agent-registry-updates-with-push-based-architecture/
+
+#aiagents #mcp #aws #bedrockagentcore #agenticai
+
+#aiagents #mcp #aws #bedrockagentcore #agenticai
