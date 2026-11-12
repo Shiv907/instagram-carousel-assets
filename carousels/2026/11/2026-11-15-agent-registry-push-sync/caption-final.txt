@@ -1,6 +1,6 @@
 You ship a new tool on your MCP server on Monday. Does your agent registry know about it on Tuesday?
 
-Most teams I've seen update the catalog by hand, so agents end up reading stale tool schemas. AWS just published a push-based way to keep AWS Agent Registry records fresh, and it's simpler than I expected.
+If that catalog is only updated by hand, agents end up reading stale tool schemas. AWS just published a push-based way to keep AWS Agent Registry records fresh, and it's simpler than I expected.
 
 The flow:
 CloudTrail sees UpdateAgentRuntime. EventBridge routes it. A Lambda calls tools/list on the server, diffs the result against the record, and updates the record only if something actually changed.
