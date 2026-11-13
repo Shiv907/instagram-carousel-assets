@@ -1,0 +1,18 @@
+Is RAG dead now that models can read huge inputs? Short answer: no. The RAG series finale 👇
+
+→ Long context wins for one long document or a small, fixed set of files
+→ RAG wins for large or changing document sets, per-user permissions and cited answers
+→ Long context means paying for every token on every question. RAG sends only what's relevant
+→ The practical answer is often both: retrieve the right documents, then send whole sections
+→ Cache the stable parts of the prompt to cut repeat latency and input token costs (Bedrock prompt caching)
+
+Carry the right chapter to class, not your whole bookshelf.
+
+Save this one 🔖 Which would you pick for your docs: long context, RAG, or both? Tell me in the comments.
+Follow @shivanshu_builds for practical AI engineering, one carousel a day.
+
+Sources: Bedrock prompt caching, Bedrock Knowledge Bases retrieval APIs, Bedrock agentic retrieval (docs.aws.amazon.com/bedrock/latest/userguide)
+
+#ragseries #rag #longcontext #genai #llm
+
+#ragseries #rag #longcontext #genai #llm
