@@ -1,0 +1,195 @@
+{
+ "title": "RAG vs long context: is RAG dead?",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "RAG 16/16",
+ "slug": "rag-16-finale-rag-vs-long-context",
+ "caption": "Is RAG dead now that models can read huge inputs? Short answer: no. The RAG series finale 👇\n\n→ Long context wins for one long document or a small, fixed set of files\n→ RAG wins for large or changing document sets, per-user permissions and cited answers\n→ Long context means paying for every token on every question. RAG sends only what's relevant\n→ The practical answer is often both: retrieve the right documents, then send whole sections\n→ Cache the stable parts of the prompt to cut repeat latency and input token costs (Bedrock prompt caching)\n\nCarry the right chapter to class, not your whole bookshelf.\n\nSave this one 🔖 Which would you pick for your docs: long context, RAG, or both? Tell me in the comments.\nFollow @shivanshu_builds for practical AI engineering, one carousel a day.\n\nSources: Bedrock prompt caching, Bedrock Knowledge Bases retrieval APIs, Bedrock agentic retrieval (docs.aws.amazon.com/bedrock/latest/userguide)\n\n#ragseries #rag #longcontext #genai #llm",
+ "hashtags": [
+  "ragseries",
+  "rag",
+  "longcontext",
+  "genai",
+  "llm"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "stack",
+   "kicker": "RAG series, part 16/16 (finale)",
+   "headline": "Is RAG dead? ==Long context vs retrieval.==",
+   "sub": "When to paste it all in, and when to retrieve.",
+   "chips": [
+    "Bedrock",
+    "RAG"
+   ]
+  },
+  {
+   "layout": "text",
+   "kicker": "The argument",
+   "title": "Why not paste everything in?",
+   "paragraphs": [
+    "Models can now read very long inputs, so why not send **all your documents** and skip retrieval?",
+    "Think of carrying **every book you own** to class versus bringing the **right chapter**."
+   ],
+   "callout": "Both work for a small shelf. Only one works for a library."
+  },
+  {
+   "layout": "comparison",
+   "title": "Long context vs ==RAG==",
+   "columns": [
+    "Long context",
+    "RAG"
+   ],
+   "highlight": "RAG",
+   "rows": [
+    {
+     "label": "Amount of data",
+     "values": [
+      "up to the window",
+      "any size"
+     ]
+    },
+    {
+     "label": "Cost per question",
+     "values": [
+      "every token sent",
+      "retrieved chunks"
+     ]
+    },
+    {
+     "label": "New documents",
+     "values": [
+      "send again",
+      "re-index"
+     ]
+    },
+    {
+     "label": "Per-user access",
+     "values": [
+      "hard",
+      "filter chunks"
+     ]
+    },
+    {
+     "label": "Citations",
+     "values": [
+      "possible",
+      "built in"
+     ]
+    }
+   ],
+   "foot": "General trade-offs, not benchmarks."
+  },
+  {
+   "layout": "cards",
+   "style": "stack",
+   "title": "When long context ==wins==",
+   "cards": [
+    {
+     "title": "One long document",
+     "text": "read it whole, in one go"
+    },
+    {
+     "title": "A small fixed set",
+     "text": "a few files that rarely change"
+    },
+    {
+     "title": "Whole-thing tasks",
+     "text": "summarise a contract, compare two reports"
+    }
+   ]
+  },
+  {
+   "layout": "cards",
+   "style": "stack",
+   "title": "When ==RAG== wins",
+   "cards": [
+    {
+     "title": "Big or changing sets",
+     "text": "documents grow and update"
+    },
+    {
+     "title": "Many users",
+     "text": "different people, different permissions"
+    },
+    {
+     "title": "Cited answers",
+     "text": "every claim points to a source"
+    },
+    {
+     "title": "High volume",
+     "text": "pay for relevant chunks only"
+    }
+   ]
+  },
+  {
+   "layout": "flow",
+   "title": "Best of ==both==",
+   "nodes": [
+    {
+     "label": "Retrieve",
+     "sub": "find the relevant documents"
+    },
+    {
+     "label": "Send sections",
+     "sub": "whole sections, not tiny chunks"
+    },
+    {
+     "label": "Cache",
+     "sub": "stable prompt parts first"
+    },
+    {
+     "label": "Answer",
+     "sub": "grounded in what was sent",
+     "highlight": true
+    }
+   ],
+   "foot": "Bedrock caching cuts ==latency and input token cost.=="
+  },
+  {
+   "layout": "text",
+   "kicker": "Part 12 revisited",
+   "title": "Agentic retrieval blurs the line",
+   "paragraphs": [
+    "With **agentic retrieval**, a model plans sub-queries and retrieves, then checks if the results are enough.",
+    "When it needs more, it can pull **the full content of a document** with `GetDocumentContent`."
+   ],
+   "callout": "It reads a lot, and searches when it needs more."
+  },
+  {
+   "layout": "recap",
+   "lhs": "Choose by",
+   "terms": [
+    "data size",
+    "freshness",
+    "permissions",
+    "cost"
+   ],
+   "cta": [
+    "RAG isn't dead. Long context is just another tool.",
+    "Sources: Bedrock prompt caching; Knowledge Bases retrieval APIs; Bedrock agentic retrieval (docs.aws.amazon.com)"
+   ]
+  },
+  {
+   "layout": "cta",
+   "headline": "Long context, ==RAG, or both?==",
+   "sub": "That's the RAG series. Tell me what you'd pick.",
+   "actions": [
+    {
+     "type": "save",
+     "text": "Keep it for your next design review"
+    },
+    {
+     "type": "share",
+     "text": "Send it to the team arguing about it"
+    },
+    {
+     "type": "follow",
+     "text": "Agentic AI + AWS, every day"
+    }
+   ],
+   "handle_tagline": "Source: AWS Bedrock User Guide"
+  }
+ ]
+}
