@@ -1,0 +1,136 @@
+{
+ "title": "Per-user access control for Bedrock KB tools",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "AgentCore Gateway",
+ "slug": "user-access-control-kb-agentcore",
+ "caption": "Your agent searches company docs for a user. Who decides which user?\n\nIf the search tool takes \"who to search as\" as an argument, the LLM decides. One prompt injection and it searches as someone else.\n\nAWS published a pattern for Bedrock Managed Knowledge Base behind AgentCore Gateway. The rule: don't let the LLM decide who the user is.\n\nHow it works:\n1. A request interceptor (Lambda) overwrites userContext from the validated JWT\n2. ACL awareness returns only documents that user may view\n3. A Cedar policy denies the call if userContext.userId doesn't match the token's email\n4. A resource-based policy denies every principal except the gateway role\n\nGotcha: ACL mistakes don't throw errors. Documents are silently left out of results.\n\nSave this before you ship a multi-tenant agent. Which layer are you missing today? Tell me in the comments.\n\nSource: https://aws.amazon.com/blogs/machine-learning/fine-grained-access-control-for-amazon-bedrock-managed-knowledge-base-tools/",
+ "hashtags": [
+  "aiagents",
+  "bedrockagentcore",
+  "aws",
+  "rag",
+  "agenticai"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "loop",
+   "kicker": "AgentCore Gateway",
+   "headline": "Never let the LLM decide ==who the user is.==",
+   "sub": "Per-user access control for a shared agent and knowledge base.",
+   "chips": [
+    "Bedrock KB",
+    "AgentCore"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "The problem",
+   "paragraphs": [
+    "One assistant, one knowledge base, every employee. Dept A must not see B's docs.",
+    "If the search tool takes **who to search as** as an argument, the **LLM sets it**. Injection can spoof it."
+   ],
+   "callout": "The model should never write an auth value.",
+   "kicker": "Why agents are harder"
+  },
+  {
+   "layout": "steps-cycle",
+   "title": "Four layers, one request",
+   "steps": [
+    {
+     "title": "JWT authorizer",
+     "text": "Validates the token"
+    },
+    {
+     "title": "Interceptor",
+     "text": "Overwrites userContext"
+    },
+    {
+     "title": "Cedar policy",
+     "text": "Checks it matches the token"
+    },
+    {
+     "title": "KB ACLs",
+     "text": "Return only allowed docs"
+    }
+   ],
+   "foot": "Plus a ==resource policy== on the knowledge base."
+  },
+  {
+   "layout": "code",
+   "title": "Per-document ACL",
+   "filename": "dept-a-plan.txt.metadata.json",
+   "language": "json",
+   "badge": "",
+   "code": "{\n  \"metadataAttributes\": {\n    \"department\": \"d001\", \"year\": 2026\n  },\n  \"accessControlList\": [\n    { \"Name\": \"user-a@example.com\",\n      \"Type\": \"USER\", \"Access\": \"ALLOW\" }\n  ]\n}",
+   "foot": "Pass ==userContext.userId== at query time to scope results."
+  },
+  {
+   "layout": "code",
+   "title": "Primary fix: overwrite it",
+   "filename": "interceptor.py",
+   "language": "python",
+   "badge": "",
+   "code": "email = _email_from_token(token)\nif not email:\n    return _error_response(\n        \"no email claim\", body)  # fail closed\n\n# always overwrite what the LLM sent\nargs[\"userContext\"] = {\"userId\": email}\nreturn _pass_through(body)",
+   "foot": "Trusted code sets it from the ==verified token.=="
+  },
+  {
+   "layout": "code",
+   "title": "Backup: Cedar policy",
+   "filename": "policy.cedar",
+   "language": "text",
+   "badge": "",
+   "code": "permit(\n  principal is AgentCore::OAuthUser,\n  action == AgentCore::Action::\"kb___Retrieve\",\n  resource == AgentCore::Gateway::\"<ARN>\"\n) when {\n  context.input.userContext.userId\n    == principal.getTag(\"email\")\n};",
+   "foot": "Denies the call if the ==interceptor failed.=="
+  },
+  {
+   "layout": "text",
+   "title": "Close the side doors",
+   "paragraphs": [
+    "A **resource-based policy** on the knowledge base denies Retrieve and GetDocumentContent to every principal except the gateway execution role.",
+    "That blocks a second gateway or a direct SDK call, **even from admins**."
+   ],
+   "callout": "Don't share the gateway role with other workloads.",
+   "kicker": "Resource layer"
+  },
+  {
+   "layout": "pitfalls",
+   "title": "Know the ==gotchas==",
+   "cards": [
+    {
+     "title": "Silent ACL misses",
+     "text": "mistakes return no error"
+    },
+    {
+     "title": "Email claim",
+     "text": "Cognito needs Essentials or Plus plan"
+    },
+    {
+     "title": "Sync delay",
+     "text": "S3 ACL changes apply after next sync"
+    },
+    {
+     "title": "No userContext",
+     "text": "ACL-enabled sources return nothing"
+    }
+   ]
+  },
+  {
+   "layout": "cta",
+   "headline": "Which layer is ==missing?==",
+   "sub": "Sample pattern from AWS. Test it in your own account first.",
+   "actions": [
+    {
+     "type": "save",
+     "text": "Keep it for your multi-tenant agent"
+    },
+    {
+     "type": "follow",
+     "text": "Agentic AI + AWS, every week"
+    }
+   ],
+   "handle_tagline": "Source: AWS Machine Learning Blog, 12 Nov 2026"
+  }
+ ]
+}
