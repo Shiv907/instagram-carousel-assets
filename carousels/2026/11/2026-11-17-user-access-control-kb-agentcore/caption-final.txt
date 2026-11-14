@@ -1,0 +1,19 @@
+Your agent searches company docs on behalf of a user. So who decides which user?
+
+If your search tool takes "who to search as" as an argument, the LLM fills it in. One prompt injection and it's searching as someone else. That's the bit that bugs me about a lot of agent demos.
+
+AWS just published a pattern for a Bedrock Managed Knowledge Base behind AgentCore Gateway, and the rule is simple: never let the LLM decide who the user is.
+
+The way they layer it:
+1. A request interceptor (a Lambda) overwrites userContext from the validated JWT, whatever the model sent
+2. ACL awareness returns only the documents that user is allowed to see
+3. A Cedar policy denies the call if userContext.userId doesn't match the token's email
+4. A resource-based policy denies every principal except the gateway role
+
+The part I'd watch hardest: ACL mistakes don't throw errors. Documents just quietly go missing from results, so you won't notice until someone asks why the answer is incomplete.
+
+Save this before you ship a multi-tenant agent. Which of these layers is missing in yours right now? Tell me in the comments.
+
+Source: https://aws.amazon.com/blogs/machine-learning/fine-grained-access-control-for-amazon-bedrock-managed-knowledge-base-tools/
+
+#aiagents #bedrockagentcore #aws #rag #agenticai
