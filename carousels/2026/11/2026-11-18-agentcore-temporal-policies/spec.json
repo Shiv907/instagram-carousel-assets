@@ -1,0 +1,176 @@
+{
+ "title": "AgentCore temporal policies: your agent's guardrails have amnesia",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "AgentCore Policy",
+ "slug": "agentcore-temporal-policies",
+ "caption": "Your agent's guardrails have amnesia \ud83e\udde0\n\nA normal Cedar policy is stateless. It only sees the current request, so it can't say \"only disburse a payment after this claim was approved\".\n\nAgentCore temporal policies can. Their decisions depend on what happened earlier in the session.\n\nWhat to know before you use them:\n\u2192 Written in Dogwood, which supports all existing Cedar policies\n\u2192 formerly within, since within, count and sum\n\u2192 Limits: 24h window, 3 operators per policy, 20 temporal policies per engine\n\u2192 The prior action needs its own plain permit, or the rule never matches\n\u2192 Roll out in LOG_ONLY first, then ENFORCE\n\u2192 You must send the session-ID header yourself\n\u2192 A count limit is not a security control: a new session resets it\n\nSave this before you add approval rules to an agent \ud83d\udd16\nFollow @shivanshu_builds for practical agent engineering on AWS, one carousel a day.\n\nSource: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy-temporal.html",
+ "hashtags": [
+  "aiagents",
+  "bedrockagentcore",
+  "aws",
+  "agenticai",
+  "aisecurity"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "loop",
+   "glyph": "24h",
+   "kicker": "AgentCore Policy",
+   "headline": "Your agent's guardrails ==have amnesia.==",
+   "sub": "Stateless policies see one request. Temporal policies see the session.",
+   "chips": [
+    "AgentCore",
+    "Cedar",
+    "Dogwood"
+   ]
+  },
+  {
+   "layout": "text",
+   "kicker": "The gap",
+   "title": "A rule that needs memory",
+   "paragraphs": [
+    "Standard Cedar policies \"are stateless and consider only the current request\".",
+    "So \"disburse only after this claim was approved\" can't be expressed. Temporal policies' decisions **depend on the history of the agent's actions within a session**."
+   ],
+   "callout": "Same deny-by-default model as Cedar."
+  },
+  {
+   "layout": "code",
+   "title": "Approve first, then disburse",
+   "filename": "disburse_only_approved.dw",
+   "language": "text",
+   "badge": "Dogwood",
+   "font_size": 28,
+   "code": "permit (principal,\n  action == ...::\"InsuranceAPI___disburse_payment\",\n  resource == AgentCore::Gateway::\"arn:...\")\nwhen temporal {\n  formerly within 1h\n    ...::\"InsuranceAPI___approve_claim\"::response {\n      eventResource: resource,\n      output.claimId: context.input.claimId } };",
+   "foot": "Condensed from the AWS authoring docs. Ellipses mark shortened names."
+  },
+  {
+   "layout": "pitfalls",
+   "title": "The prior action needs a ==plain permit==",
+   "cards": [
+    {
+     "title": "No permit for approve_claim",
+     "text": "It is denied and recorded as an error, not a response."
+    },
+    {
+     "title": "Rule never matches",
+     "text": "The condition looks for a response event, so disburse stays denied.",
+     "fix": "Add a separate plain permit for approve_claim."
+    }
+   ]
+  },
+  {
+   "layout": "bullets",
+   "title": "The temporal toolbox",
+   "marker": "arrow",
+   "items": [
+    {
+     "title": "formerly within",
+     "text": "a matching event happened earlier in the window"
+    },
+    {
+     "title": "since within",
+     "text": "a condition has held since an anchor event"
+    },
+    {
+     "title": "count",
+     "text": "matching events, including the current request"
+    },
+    {
+     "title": "sum",
+     "text": "over integer fields such as amountCents"
+    }
+   ]
+  },
+  {
+   "layout": "bullets",
+   "title": "Hard limits",
+   "marker": "dot",
+   "items": [
+    {
+     "title": "24 hours",
+     "text": "maximum time window per temporal condition"
+    },
+    {
+     "title": "3 operators",
+     "text": "per temporal policy"
+    },
+    {
+     "title": "20 policies",
+     "text": "temporal policies per policy engine"
+    },
+    {
+     "title": "Same account + Region",
+     "text": "gateway and targets must live together"
+    }
+   ]
+  },
+  {
+   "layout": "flow",
+   "title": "Roll out in two modes",
+   "nodes": [
+    {
+     "label": "Author the policy",
+     "sub": "attach it to the policy engine",
+     "edge": "start here"
+    },
+    {
+     "label": "LOG_ONLY",
+     "sub": "evaluates and logs, enforces nothing",
+     "edge": "review the logs"
+    },
+    {
+     "label": "ENFORCE",
+     "sub": "allows or denies agent operations",
+     "highlight": true
+    }
+   ],
+   "foot": "Anyone with ==UpdateGateway== can flip it back to LOG_ONLY, or remove the engine."
+  },
+  {
+   "layout": "pitfalls",
+   "title": "Where it ==bites==",
+   "cards": [
+    {
+     "title": "No session ID, no request",
+     "text": "Send x-amzn-bedrock-agentcore-policy-session-id yourself. The Gateway won't generate one."
+    },
+    {
+     "title": "Count is not security",
+     "text": "The caller picks the session, so a new session resets the count."
+    },
+    {
+     "title": "Edit a policy, get a 409",
+     "text": "Changing a temporal policy invalidates open sessions."
+    }
+   ]
+  },
+  {
+   "layout": "sources",
+   "sources": [
+    {
+     "title": "Temporal policies",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore",
+     "note": "policy-temporal"
+    },
+    {
+     "title": "Authoring temporal policies",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore",
+     "note": "policy-temporal-authoring"
+    },
+    {
+     "title": "Temporal policy examples",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore",
+     "note": "example-policies-temporal"
+    },
+    {
+     "title": "Policy enforcement modes",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore",
+     "note": "policy-enforcement-modes"
+    }
+   ]
+  }
+ ]
+}
