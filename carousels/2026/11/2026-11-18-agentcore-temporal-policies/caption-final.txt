@@ -1,0 +1,29 @@
+Your agent's guardrails have amnesia. A normal policy has no idea what the agent did five minutes ago.
+
+Here's the problem. A standard Cedar policy is stateless, so it only sees the current request. That means you can't write a rule like "only disburse a payment after this claim was approved".
+
+AgentCore temporal policies fix exactly that. Their decisions depend on what already happened earlier in the session.
+
+What I'd want to know before using them:
+
+They're written in Dogwood, which supports all your existing Cedar policies.
+
+You get four operators: formerly within, since within, count and sum.
+
+The limits are real: a 24h window, 3 operators per policy and 20 temporal policies per engine.
+
+The one that would trip me up: the earlier action needs its own plain permit. Skip it and the rule never matches.
+
+Roll out in LOG_ONLY first, then switch to ENFORCE.
+
+You have to send the session-ID header yourself.
+
+And don't treat a count limit as a security control. A new session resets it.
+
+Save this before you add approval rules to an agent 🔖 Which rule would you write first? Tell me in the comments.
+
+Follow @shivanshu_builds for practical agent engineering on AWS.
+
+Source: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy-temporal.html
+
+#aiagents #bedrockagentcore #aws #agenticai #aisecurity
