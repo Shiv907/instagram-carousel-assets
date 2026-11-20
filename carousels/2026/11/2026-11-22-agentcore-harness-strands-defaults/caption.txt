@@ -1,0 +1,23 @@
+Your "*" tools list just grew, and nobody asked you.
+
+AWS began rolling out Strands harness defaults to AgentCore harness on Nov 11. No customer action required. If your harness omits allowedTools, or sets it to ["*"], it now gets the new managed built-ins.
+
+The new ones: todo_write, subagent, web_fetch, and separate read, write and edit tools.
+
+What I'd do about it:
+
+If you need a fixed boundary, list the tools you actually need. AWS says the "*" set can gain capabilities over time.
+
+Pin the model and system prompt too, or they follow the managed defaults.
+
+Add a before_tool_call Lambda hook for anything consequential. Only Lambda hooks can allow or deny, and failureMode defaults to deny.
+
+Subagent tool calls go through the same hooks, so delegation doesn't skip your checks.
+
+Save this before your next harness deploy 🔖 Is your allowedTools a list or a star? Tell me in the comments.
+
+Follow @shivanshu_builds for practical agent engineering on AWS.
+
+Source: https://aws.amazon.com/blogs/machine-learning/amazon-bedrock-agentcore-harness-adds-strands-harness-defaults-built-in-tools-and-lifecycle-hooks/
+
+#aiagents #bedrockagentcore #strandsagents #aws #aisecurity

@@ -1,0 +1,187 @@
+{
+ "title": "AgentCore payments: agents pay AWS Marketplace sellers on your AWS bill",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "AgentCore Payments",
+ "slug": "agentcore-marketplace-payments",
+ "caption": "Your agent can now buy things on your AWS bill.\n\nPaid APIs usually mean a human signs up, adds a card and creates an API key. AgentCore payments now lets an agent pay x402-enabled AWS Marketplace sellers per request, in USD, with no crypto wallet.\n\nThe flow, as documented:\n\nDiscover with three read-only Gateway tools. Get a 402 quote. Call ProcessPayment with AWS_BILLING_X402. Retry with the PAYMENT-SIGNATURE header.\n\nWhat I'd check before using it:\n\nThe payment token is valid for 5 minutes and should be treated like a credential.\n\nSessions are where your spend cap lives. Don't give the paying role CreatePaymentSession, or it can mint a bigger budget.\n\nA single payment must be above $0.00 and at most $10,000.00.\n\nAt launch it supports the x402 exact scheme only.\n\nSave this before you let an agent near a budget 🔖 What would you let yours buy first? Tell me in the comments.\n\nFollow @shivanshu_builds for practical agent engineering on AWS.\n\nSources: https://aws.amazon.com/blogs/machine-learning/enable-ai-agents-to-pay-for-aws-marketplace-x402-products-with-amazon-bedrock-agentcore-payments/ and https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/payments-process-payment.html",
+ "hashtags": [
+  "aiagents",
+  "bedrockagentcore",
+  "aws",
+  "agenticai",
+  "x402"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "glyph",
+   "glyph": "$",
+   "kicker": "AgentCore payments",
+   "headline": "Your agent can now ==buy things== on your AWS bill",
+   "sub": "x402 sellers on AWS Marketplace, paid per request in USD.",
+   "chips": [
+    "x402",
+    "Marketplace"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "The old way needs a human",
+   "paragraphs": [
+    "A paid API usually means someone **signs up, adds a payment method and creates an API key**, per seller.",
+    "Now the agent pays **x402-enabled Marketplace sellers per request**, in USD, on your AWS bill. **No crypto wallet.**"
+   ],
+   "callout": "Launched Nov 19, 2026 in AgentCore payments."
+  },
+  {
+   "layout": "steps-cycle",
+   "title": "One purchase, 5 steps",
+   "steps": [
+    {
+     "title": "Discover",
+     "text": "3 read-only Gateway tools"
+    },
+    {
+     "title": "Quote",
+     "text": "Seller replies 402 with a signed quote"
+    },
+    {
+     "title": "Pay",
+     "text": "`ProcessPayment` returns a token"
+    },
+    {
+     "title": "Redeem",
+     "text": "Retry with `PAYMENT-SIGNATURE`"
+    },
+    {
+     "title": "Settle",
+     "text": "Metered to your bill, async"
+    }
+   ],
+   "center": "402",
+   "foot": "Altered price? The signed quote ==gets rejected.=="
+  },
+  {
+   "layout": "code",
+   "title": "Step 3: pay the quote",
+   "filename": "pay.py",
+   "language": "python",
+   "font_size": 30,
+   "highlight": [
+    5,
+    6,
+    7
+   ],
+   "code": "entry = next(e for e in req[\"accepts\"]\n             if e[\"network\"] == \"aws:base\")\n\npay = dp.process_payment(\n  paymentManagerArn=ARN,\n  paymentSessionId=SESSION,\n  paymentInstrumentId=\n    \"aws.agentcorepayments.awsbilling.v1\",\n  paymentType=\"AWS_BILLING_X402\",\n  paymentInput={\"awsBillingX402\": {\n    \"version\": \"2\", \"payload\": entry}})",
+   "foot": "Pass the `aws:base` entry ==unchanged==."
+  },
+  {
+   "layout": "bullets",
+   "title": "Discovery: 3 read-only tools",
+   "marker": "number",
+   "items": [
+    {
+     "title": "SearchListings",
+     "text": "returns x402 listings only"
+    },
+    {
+     "title": "GetListing",
+     "text": "read the seller's listing"
+    },
+    {
+     "title": "ListFulfillmentOptions",
+     "text": "endpoint URL + accepted protocols"
+    }
+   ]
+  },
+  {
+   "layout": "comparison",
+   "title": "Split the roles",
+   "columns": [
+    "Session role",
+    "Agent role"
+   ],
+   "highlight": "Agent role",
+   "rows": [
+    {
+     "label": "Create sessions + set budget",
+     "values": [
+      true,
+      false
+     ]
+    },
+    {
+     "label": "Process payment",
+     "values": [
+      false,
+      true
+     ]
+    }
+   ],
+   "foot": "The sample's agent can pay but has no way to ==raise its own budget.=="
+  },
+  {
+   "layout": "pitfalls",
+   "title": "Before you ship",
+   "cards": [
+    {
+     "title": "Token",
+     "text": "Valid 5 minutes. Treat it as a credential and don't log it."
+    },
+    {
+     "title": "Limits",
+     "text": "One payment: above $0.00, at most $10,000.00."
+    },
+    {
+     "title": "Scheme",
+     "text": "Launch supports x402 `exact` only (fixed price per request)."
+    },
+    {
+     "title": "Bill",
+     "text": "Settlement is async and shows up monthly."
+    }
+   ]
+  },
+  {
+   "layout": "recap",
+   "lhs": "Agent purchase",
+   "terms": [
+    "session cap",
+    "signed quote",
+    "payment token",
+    "your AWS bill"
+   ],
+   "cta": [
+    "Save this before you give an agent a budget."
+   ],
+   "next": {
+    "label": "Tomorrow:",
+    "title": "Your * tools list just grew"
+   }
+  },
+  {
+   "layout": "sources",
+   "sources": [
+    {
+     "title": "AgentCore payments adds AWS Marketplace (ML Blog)",
+     "domain": "aws.amazon.com/blogs/machine-learning",
+     "note": "Nov 19, 2026"
+    },
+    {
+     "title": "What's New: Marketplace agentic payments",
+     "domain": "aws.amazon.com/about-aws/whats-new"
+    },
+    {
+     "title": "AgentCore Dev Guide: ProcessPayment",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore"
+    },
+    {
+     "title": "AgentCore Dev Guide: payments IAM roles",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore"
+    }
+   ],
+   "foot": "Check the docs for Regions and current limits."
+  }
+ ]
+}

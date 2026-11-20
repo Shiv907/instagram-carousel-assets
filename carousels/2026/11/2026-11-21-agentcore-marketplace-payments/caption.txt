@@ -1,0 +1,25 @@
+Your agent can now buy things on your AWS bill.
+
+Paid APIs usually mean a human signs up, adds a card and creates an API key. AgentCore payments now lets an agent pay x402-enabled AWS Marketplace sellers per request, in USD, with no crypto wallet.
+
+The flow, as documented:
+
+Discover with three read-only Gateway tools. Get a 402 quote. Call ProcessPayment with AWS_BILLING_X402. Retry with the PAYMENT-SIGNATURE header.
+
+What I'd check before using it:
+
+The payment token is valid for 5 minutes and should be treated like a credential.
+
+Sessions are where your spend cap lives. Don't give the paying role CreatePaymentSession, or it can mint a bigger budget.
+
+A single payment must be above $0.00 and at most $10,000.00.
+
+At launch it supports the x402 exact scheme only.
+
+Save this before you let an agent near a budget 🔖 What would you let yours buy first? Tell me in the comments.
+
+Follow @shivanshu_builds for practical agent engineering on AWS.
+
+Sources: https://aws.amazon.com/blogs/machine-learning/enable-ai-agents-to-pay-for-aws-marketplace-x402-products-with-amazon-bedrock-agentcore-payments/ and https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/payments-process-payment.html
+
+#aiagents #bedrockagentcore #aws #agenticai #x402

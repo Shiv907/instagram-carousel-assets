@@ -1,0 +1,155 @@
+{
+ "title": "AgentCore harness: Strands defaults, new built-in tools and lifecycle hooks",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "AgentCore Harness",
+ "slug": "agentcore-harness-strands-defaults",
+ "caption": "Your \"*\" tools list just grew, and nobody asked you.\n\nAWS began rolling out Strands harness defaults to AgentCore harness on Nov 11. No customer action required. If your harness omits allowedTools, or sets it to [\"*\"], it now gets the new managed built-ins.\n\nThe new ones: todo_write, subagent, web_fetch, and separate read, write and edit tools.\n\nWhat I'd do about it:\n\nIf you need a fixed boundary, list the tools you actually need. AWS says the \"*\" set can gain capabilities over time.\n\nPin the model and system prompt too, or they follow the managed defaults.\n\nAdd a before_tool_call Lambda hook for anything consequential. Only Lambda hooks can allow or deny, and failureMode defaults to deny.\n\nSubagent tool calls go through the same hooks, so delegation doesn't skip your checks.\n\nSave this before your next harness deploy 🔖 Is your allowedTools a list or a star? Tell me in the comments.\n\nFollow @shivanshu_builds for practical agent engineering on AWS.\n\nSource: https://aws.amazon.com/blogs/machine-learning/amazon-bedrock-agentcore-harness-adds-strands-harness-defaults-built-in-tools-and-lifecycle-hooks/",
+ "hashtags": [
+  "aiagents",
+  "bedrockagentcore",
+  "strandsagents",
+  "aws",
+  "aisecurity"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "glyph",
+   "glyph": "*",
+   "kicker": "AgentCore harness",
+   "headline": "Your \"*\" tools list ==just grew==",
+   "sub": "New Strands defaults landed in harness. Did your boundary move?",
+   "chips": [
+    "allowedTools",
+    "Strands"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "What changed, quietly",
+   "paragraphs": [
+    "The Strands-backed harness rollout began **Nov 11**. AWS says **no customer action is required**.",
+    "Omit the model, system prompt or `truncation`, or use `allowedTools: [\"*\"]`? You get the **new managed defaults**."
+   ],
+   "callout": "Explicit config you set stays unchanged."
+  },
+  {
+   "layout": "bullets",
+   "title": "New built-in tools",
+   "marker": "dot",
+   "items": [
+    {
+     "title": "todo_write",
+     "text": "task plan restored across invocations"
+    },
+    {
+     "title": "subagent",
+     "text": "delegates a task to a fresh worker"
+    },
+    {
+     "title": "web_fetch",
+     "text": "retrieves content from a webpage"
+    },
+    {
+     "title": "read / write / edit",
+     "text": "separate, granular filesystem tools"
+    }
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Pin the boundary",
+   "filename": "harness.json",
+   "language": "json",
+   "font_size": 34,
+   "highlight": [
+    2,
+    3,
+    4
+   ],
+   "code": "{\n  \"allowedTools\": [\n    \"read\",\n    \"web_fetch\"\n  ]\n}",
+   "foot": "Read-only files + web. ==No shell, no edits.== From AWS's own example."
+  },
+  {
+   "layout": "cards",
+   "style": "grid",
+   "title": "4 lifecycle hooks",
+   "cards": [
+    {
+     "title": "before_invocation",
+     "text": "Deny stops it: hook_stopped"
+    },
+    {
+     "title": "before_tool_call",
+     "text": "Deny skips the tool; the loop continues"
+    },
+    {
+     "title": "after_tool_call",
+     "text": "Deny keeps the result, stops before more inference"
+    },
+    {
+     "title": "after_invocation",
+     "text": "Reports the decision; streamed output stays"
+    }
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "A Lambda hook that denies",
+   "filename": "refund_policy.py",
+   "language": "python",
+   "font_size": 30,
+   "highlight": [
+    4,
+    5
+   ],
+   "code": "def lambda_handler(event, _ctx):\n    t = event[\"context\"]\n    if (t[\"toolName\"] == \"issue_refund\"\n        and t[\"toolInput\"][\"amount\"] > 500):\n        return {\"decision\": \"deny\",\n                \"reason\": \"Over $500 limit\"}\n    return {\"decision\": \"allow\"}",
+   "foot": "Deterministic code beats a ==prompt asking nicely.=="
+  },
+  {
+   "layout": "checklist",
+   "tone": "warn",
+   "title": "Harden it",
+   "items": [
+    "List `allowedTools`, don't use `\"*\"`",
+    "Pin the model and system prompt",
+    "Only Lambda hooks can block",
+    "Hook errors follow `failureMode` (default deny)",
+    "Subagents run the same tool hooks"
+   ],
+   "foot": "Managed defaults ==can evolve.=="
+  },
+  {
+   "layout": "recap",
+   "lhs": "Fixed boundary",
+   "terms": [
+    "explicit allowedTools",
+    "pinned model",
+    "Lambda hooks"
+   ],
+   "cta": [
+    "Save this before your next harness deploy."
+   ]
+  },
+  {
+   "layout": "sources",
+   "sources": [
+    {
+     "title": "AgentCore harness adds Strands defaults, built-in tools, hooks (ML Blog)",
+     "domain": "aws.amazon.com/blogs/machine-learning",
+     "note": "Nov 19, 2026"
+    },
+    {
+     "title": "AgentCore Developer Guide: harness",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore"
+    },
+    {
+     "title": "Strands harness (open source, Apache 2.0)",
+     "domain": "github.com/strands-agents/harness-sdk"
+    }
+   ],
+   "foot": "Managed defaults can change. Check the docs."
+  }
+ ]
+}
