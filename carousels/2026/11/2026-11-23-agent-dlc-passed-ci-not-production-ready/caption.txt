@@ -1,0 +1,25 @@
+Your agent passed CI. Is it production-ready? Not necessarily.
+
+AWS published a measured example that shows why. A policy assistant answered 3 HR questions over a knowledge base. Chunk-level precision was 1.00 on all three, so a release gate built on that metric would have shipped every answer.
+
+Fact-level precision told a different story: 0.59, 0.53 and 0.09. On the sick-leave question, about nine in ten retrieved facts were irrelevant, and retrieval coverage was 0.00. The corpus had no dedicated sick-leave policy.
+
+Then they changed only the system prompt. One answer got better, the sick-leave one got worse. A prompt can't fix missing source material.
+
+What I'm taking from it (the Agent DLC idea):
+
+→ Agents are non-deterministic, so run each example k times and judge the pass rate, not one assertion
+→ Prompts, tools, retrieval and memory settings are source code: version them with an evaluation attached
+→ Dependencies move on their own, so re-run your evals on a schedule
+→ Split criteria into hard constraints, release gates and monitoring-only
+→ Change one thing, then re-evaluate
+
+Note: AWS labels this a reference implementation, not a benchmark or a customer result.
+
+Save this before your next agent release 🔖 Which one is missing from your pipeline: k runs, fact-level checks or scheduled re-runs? Tell me below.
+
+Follow @shivanshu_builds for practical agent engineering on AWS.
+
+Source: https://aws.amazon.com/blogs/machine-learning/from-prototype-to-production-engineering-agents-with-agent-dlc/
+
+#aiagents #agenticai #llmevaluation #aws #bedrockagentcore

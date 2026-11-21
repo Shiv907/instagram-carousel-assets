@@ -1,0 +1,214 @@
+{
+ "title": "Your agent passed CI. It's still not production-ready (Agent DLC)",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "Agent DLC",
+ "slug": "agent-dlc-passed-ci-not-production-ready",
+ "caption": "Your agent passed CI. Is it production-ready? Not necessarily.\n\nAWS published a measured example that shows why. A policy assistant answered 3 HR questions over a knowledge base. Chunk-level precision was 1.00 on all three, so a release gate built on that metric would have shipped every answer.\n\nFact-level precision told a different story: 0.59, 0.53 and 0.09. On the sick-leave question, about nine in ten retrieved facts were irrelevant, and retrieval coverage was 0.00. The corpus had no dedicated sick-leave policy.\n\nThen they changed only the system prompt. One answer got better, the sick-leave one got worse. A prompt can't fix missing source material.\n\nWhat I'm taking from it (the Agent DLC idea):\n\n→ Agents are non-deterministic, so run each example k times and judge the pass rate, not one assertion\n→ Prompts, tools, retrieval and memory settings are source code: version them with an evaluation attached\n→ Dependencies move on their own, so re-run your evals on a schedule\n→ Split criteria into hard constraints, release gates and monitoring-only\n→ Change one thing, then re-evaluate\n\nNote: AWS labels this a reference implementation, not a benchmark or a customer result.\n\nSave this before your next agent release 🔖 Which one is missing from your pipeline: k runs, fact-level checks or scheduled re-runs? Tell me below.\n\nFollow @shivanshu_builds for practical agent engineering on AWS.\n\nSource: https://aws.amazon.com/blogs/machine-learning/from-prototype-to-production-engineering-agents-with-agent-dlc/",
+ "hashtags": [
+  "aiagents",
+  "agenticai",
+  "llmevaluation",
+  "aws",
+  "bedrockagentcore"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "loop",
+   "glyph": "CI ✓",
+   "kicker": "Agent DLC · AWS",
+   "headline": "Your agent passed CI. It's still ==not production-ready.==",
+   "sub": "Three reasons green builds aren't enough for agents.",
+   "chips": [
+    "Evaluations",
+    "AgentCore"
+   ]
+  },
+  {
+   "layout": "cards",
+   "style": "stack",
+   "title": "3 things unit tests ==can't see==",
+   "fix_label": "AGENT DLC",
+   "cards": [
+    {
+     "title": "Non-deterministic",
+     "text": "Same input, different output.",
+     "fix": "Run k times. Judge pass rate."
+    },
+    {
+     "title": "Prompts are code",
+     "text": "Text review can't predict behaviour.",
+     "fix": "Version it with an eval."
+    },
+    {
+     "title": "Dependencies move",
+     "text": "Models, KBs, APIs change alone.",
+     "fix": "Re-run the standard on a schedule."
+    }
+   ]
+  },
+  {
+   "layout": "comparison",
+   "title": "Chunk precision: 1.00.\nFact precision: ==0.09.==",
+   "columns": [
+    "Chunk prec.",
+    "Fact prec.",
+    "Verdict"
+   ],
+   "label_width": 300,
+   "rows": [
+    {
+     "label": "Performance review",
+     "values": [
+      "1.00",
+      "0.59",
+      "Pass"
+     ]
+    },
+    {
+     "label": "Benefits enrollment",
+     "values": [
+      "1.00",
+      "0.53",
+      "Pass"
+     ]
+    },
+    {
+     "label": "Sick-leave cert.",
+     "values": [
+      "1.00",
+      "0.09",
+      "Fail"
+     ]
+    }
+   ],
+   "foot": "AWS reference implementation (HR assistant). Not a benchmark or a customer outcome."
+  },
+  {
+   "layout": "text",
+   "title": "One prompt change, ==two opposite results==",
+   "paragraphs": [
+    "Only the system prompt changed. Performance review: fact-level precision **0.59 → 0.85**. Sick leave: **0.09 → 0.04**.",
+    "Retrieval coverage was 0.00 and the corpus had **no sick-leave policy document**. A prompt can't add missing facts."
+   ],
+   "callout": "Fix coverage first, then check retrieval."
+  },
+  {
+   "layout": "steps-cycle",
+   "title": "One lifecycle, ==two loops==",
+   "steps": [
+    {
+     "title": "Define",
+     "text": "criteria, thresholds, examples"
+    },
+    {
+     "title": "Build",
+     "text": "prompts, tools, memory"
+    },
+    {
+     "title": "Evaluate",
+     "text": "evidence vs the standard"
+    },
+    {
+     "title": "Release",
+     "text": "checked against it"
+    },
+    {
+     "title": "Observe",
+     "text": "reuse it in production"
+    },
+    {
+     "title": "Feed Back",
+     "text": "production updates it"
+    }
+   ],
+   "center": "★",
+   "foot": "**Inner:** score, inspect, change one thing, re-evaluate. **Outer:** the standard itself can change."
+  },
+  {
+   "layout": "comparison",
+   "title": "3 tiers decide ==what blocks a release==",
+   "columns": [
+    "Blocks release?",
+    "Expressed as"
+   ],
+   "highlight": "Blocks release?",
+   "label_width": 260,
+   "rows": [
+    {
+     "label": "Hard constraint",
+     "values": [
+      "Yes",
+      "boolean, per run"
+     ]
+    },
+    {
+     "label": "Release gate",
+     "values": [
+      "Until met",
+      "pass rate over k runs"
+     ]
+    },
+    {
+     "label": "Monitoring only",
+     "values": [
+      "No",
+      "tracked, promoted later"
+     ]
+    }
+   ],
+   "foot": "A high score elsewhere never offsets a ==hard-constraint== failure."
+  },
+  {
+   "layout": "timeline",
+   "title": "Your ==first week==, per AWS",
+   "pill": "One scoped business task",
+   "steps": [
+    {
+     "label": "Days 1-2",
+     "title": "agree criteria, tiers, thresholds",
+     "result": "20-30 golden examples"
+    },
+    {
+     "label": "Days 3-5",
+     "title": "build evaluators, run repeatedly",
+     "result": "publish the baseline, failures included"
+    },
+    {
+     "label": "Week 2",
+     "title": "change one thing, re-evaluate",
+     "result": "record the release decision"
+    }
+   ]
+  },
+  {
+   "layout": "recap",
+   "lhs": "Production-ready",
+   "terms": [
+    "k runs",
+    "fact-level checks",
+    "tiered gates",
+    "scheduled re-runs"
+   ],
+   "cta": [
+    "Save this before your next agent release."
+   ]
+  },
+  {
+   "layout": "sources",
+   "sources": [
+    {
+     "title": "From prototype to production: Engineering agents with Agent DLC",
+     "domain": "aws.amazon.com/blogs/machine-learning",
+     "note": "Nov 12, 2026"
+    },
+    {
+     "title": "Amazon Bedrock AgentCore Evaluations",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore"
+    }
+   ],
+   "foot": "Figures are from AWS's reference implementation, not a benchmark."
+  }
+ ]
+}
