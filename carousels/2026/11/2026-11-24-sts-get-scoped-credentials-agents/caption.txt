@@ -1,0 +1,23 @@
+A sub-agent should never hold more access than the agent that started it.
+
+AWS just shipped an STS API that enforces exactly that. GetScopedCredentials takes the temporary credentials you already have and returns new ones with the same IAM identity but fewer permissions, a shorter session, or both.
+
+The part I like: the result is the intersection of your session's permissions and the scope-down policy. So it can only shrink, never grow. An orchestrator can call it again to hand each sub-agent something narrower than its own access.
+
+What the AWS post covers:
+
+→ One inline scope-down policy (up to 2,048 characters) per call
+→ An Allow + NotAction pattern to keep most access and strip a few actions (iam:*, sts:AssumeRole*, delete calls)
+→ A trusted broker that scopes a shared role down to one tenant's S3 prefix
+→ Max 3 scope-down policies per session, each intersecting all earlier ones
+→ Every call is logged in CloudTrail, with a description you set
+
+My take: the broker should derive the scope from the task, not from whatever the agent asks for. Also list dependent actions (Athena needs s3:GetObject on the data), or the task fails.
+
+Save this for when you wire up sub-agents 🔖 Which one is your agent running with today: a scoped role or the full one? Tell me below.
+
+Follow @shivanshu_builds for practical agent engineering on AWS.
+
+Source: https://aws.amazon.com/blogs/security/scope-down-permissions-of-existing-sessions-using-aws-sts-getscopedcredentials/
+
+#aiagents #agenticai #aws #awssecurity #iam

@@ -1,0 +1,18 @@
+Your Bedrock bill can keep climbing even after you've tuned the prompt.
+
+AWS tested four request-level settings that change cost without changing your model or prompt:
+
+→ Cache duration. On Claude Sonnet 5 and Opus 5, a 5-minute cache write costs 1.25x input, a 1-hour write costs 2x, and a read costs 0.1x. If the same prefix repeats with gaps over 5 minutes, the 1-hour cache wins from the second request in the hour.
+→ Service tier. Flex on Nova 2 Lite was half the Standard rate and the bill matched. Flex on Sonnet 5 returned a ValidationException.
+→ Reasoning effort. Same 24 of 24 correct runs, but median output tokens went from 936 at low to 2,521 at high (the default on Sonnet 5 and Opus 5).
+→ maxTokens. A 155-token fence avoided 1,893 output tokens on a verbose prompt, but both responses were truncated.
+
+My take: change one setting at a time, measure tokens, and track the task pass rate. A token saving that breaks the task is not a saving. The effort numbers are from one tool-calling agent test, so measure on your own tasks.
+
+Save this before your next Bedrock cost review 🔖 Which one have you not touched yet: cache TTL, tier, effort or maxTokens? Tell me below.
+
+Follow @shivanshu_builds for practical agent engineering on AWS.
+
+Source: https://aws.amazon.com/blogs/machine-learning/four-amazon-bedrock-inference-choices-that-affect-cost/
+
+#aws #amazonbedrock #genai #llmops #aiagents

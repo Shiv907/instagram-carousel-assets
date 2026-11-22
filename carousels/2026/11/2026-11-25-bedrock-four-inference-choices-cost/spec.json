@@ -1,0 +1,164 @@
+{
+ "title": "4 Bedrock request settings that change your bill",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "Bedrock cost",
+ "slug": "bedrock-four-inference-choices-cost",
+ "caption": "Your Bedrock bill can keep climbing even after you've tuned the prompt.\n\nAWS tested four request-level settings that change cost without changing your model or prompt:\n\n→ Cache duration. On Claude Sonnet 5 and Opus 5, a 5-minute cache write costs 1.25x input, a 1-hour write costs 2x, and a read costs 0.1x. If the same prefix repeats with gaps over 5 minutes, the 1-hour cache wins from the second request in the hour.\n→ Service tier. Flex on Nova 2 Lite was half the Standard rate and the bill matched. Flex on Sonnet 5 returned a ValidationException.\n→ Reasoning effort. Same 24 of 24 correct runs, but median output tokens went from 936 at low to 2,521 at high (the default on Sonnet 5 and Opus 5).\n→ maxTokens. A 155-token fence avoided 1,893 output tokens on a verbose prompt, but both responses were truncated.\n\nMy take: change one setting at a time, measure tokens, and track the task pass rate. A token saving that breaks the task is not a saving. The effort numbers are from one tool-calling agent test, so measure on your own tasks.\n\nSave this before your next Bedrock cost review 🔖 Which one have you not touched yet: cache TTL, tier, effort or maxTokens? Tell me below.\n\nFollow @shivanshu_builds for practical agent engineering on AWS.\n\nSource: https://aws.amazon.com/blogs/machine-learning/four-amazon-bedrock-inference-choices-that-affect-cost/",
+ "hashtags": [
+  "aws",
+  "amazonbedrock",
+  "genai",
+  "llmops",
+  "aiagents"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "glyph",
+   "glyph": "$$",
+   "kicker": "Amazon Bedrock · Cost",
+   "headline": "4 request settings that ==change your Bedrock bill.==",
+   "sub": "No model swap. No prompt rewrite.",
+   "chips": [
+    "Caching",
+    "Tiers",
+    "Effort"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Where the ==cost== comes from",
+   "paragraphs": [
+    "Input and output tokens bill at the rate for the **model and tier** that served the request.",
+    "Cache reads and writes use **separate counters**. Reasoning tokens count as **output tokens**."
+   ],
+   "callout": "Read the usage metadata on every response."
+  },
+  {
+   "layout": "comparison",
+   "title": "1-hour cache: ==worth it?==",
+   "columns": [
+    "Write",
+    "Read"
+   ],
+   "label_width": 340,
+   "rows": [
+    {
+     "label": "5-minute cache",
+     "values": [
+      "1.25x input",
+      "0.1x"
+     ]
+    },
+    {
+     "label": "1-hour cache",
+     "values": [
+      "2x input",
+      "0.1x"
+     ]
+    }
+   ],
+   "foot": "Sonnet 5 / Opus 5 rates. Same prefix, gaps over 5 min: 1-hour wins from the ==2nd request==."
+  },
+  {
+   "layout": "code",
+   "title": "Settings, in the request",
+   "filename": "request fields",
+   "language": "json",
+   "font_size": 30,
+   "highlight": [
+    2,
+    4,
+    7,
+    9
+   ],
+   "code": "{ \"cachePoint\": {\n    \"type\": \"default\", \"ttl\": \"1h\" } }\n\n{ \"serviceTier\": { \"type\": \"flex\" } }\n\n{ \"thinking\": { \"type\": \"adaptive\" },\n  \"output_config\": { \"effort\": \"low\" } }\n\n{ \"inferenceConfig\": { \"maxTokens\": 155 } }",
+   "foot": "Support is ==per model==. Check before you send."
+  },
+  {
+   "layout": "text",
+   "title": "Flex: half price, ==if supported==",
+   "paragraphs": [
+    "Nova 2 Lite, 400 requests: same tokens on both tiers. The Flex rate was **half Standard** and the bill matched.",
+    "Sonnet 5 and Opus 5 don't list Flex. The request failed with a `ValidationException`."
+   ],
+   "callout": "Retry once on default. Don't retry every ValidationException."
+  },
+  {
+   "layout": "comparison",
+   "title": "24/24 correct. ==936 vs 2,521== tokens.",
+   "columns": [
+    "Median output tokens",
+    "vs low"
+   ],
+   "highlight": "Median output tokens",
+   "label_width": 260,
+   "rows": [
+    {
+     "label": "low",
+     "values": [
+      "936",
+      "baseline"
+     ]
+    },
+    {
+     "label": "medium",
+     "values": [
+      "1,484",
+      "+59%"
+     ]
+    },
+    {
+     "label": "high (default)",
+     "values": [
+      "2,521",
+      "+169%"
+     ]
+    },
+    {
+     "label": "max",
+     "values": [
+      "3,762",
+      "+302%"
+     ]
+    }
+   ],
+   "foot": "One tool-calling agent on Opus 5, 8 runs per task. ==Measure on your tasks.=="
+  },
+  {
+   "layout": "stat",
+   "kicker": "maxTokens fence",
+   "value": "1,893",
+   "label": "output tokens avoided on one verbose prompt",
+   "context": "155-token fence vs 2,048 ceiling. Both responses were truncated, so a fence limits spend but won't fix the prompt.",
+   "source": "AWS Machine Learning Blog, Nov 2026"
+  },
+  {
+   "layout": "checklist",
+   "title": "The ==test loop== for each setting",
+   "items": [
+    "Confirm model support",
+    "Change one request choice",
+    "Measure tokens or cost",
+    "Track the task pass rate"
+   ],
+   "foot": "A token cut that breaks the task is ==not a saving==."
+  },
+  {
+   "layout": "sources",
+   "sources": [
+    {
+     "title": "Four Amazon Bedrock inference choices that affect cost",
+     "domain": "aws.amazon.com/blogs/machine-learning",
+     "note": "Nov 2026"
+    },
+    {
+     "title": "Amazon Bedrock Pricing",
+     "domain": "aws.amazon.com/bedrock/pricing"
+    }
+   ],
+   "foot": "Rates and support change by model. Check current pricing."
+  }
+ ]
+}

@@ -1,0 +1,162 @@
+{
+ "title": "A sub-agent can't out-rank its parent (STS GetScopedCredentials)",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "AWS STS",
+ "slug": "sts-get-scoped-credentials-agents",
+ "caption": "A sub-agent should never hold more access than the agent that started it.\n\nAWS just shipped an STS API that enforces exactly that. GetScopedCredentials takes the temporary credentials you already have and returns new ones with the same IAM identity but fewer permissions, a shorter session, or both.\n\nThe part I like: the result is the intersection of your session's permissions and the scope-down policy. So it can only shrink, never grow. An orchestrator can call it again to hand each sub-agent something narrower than its own access.\n\nWhat the AWS post covers:\n\n→ One inline scope-down policy (up to 2,048 characters) per call\n→ An Allow + NotAction pattern to keep most access and strip a few actions (iam:*, sts:AssumeRole*, delete calls)\n→ A trusted broker that scopes a shared role down to one tenant's S3 prefix\n→ Max 3 scope-down policies per session, each intersecting all earlier ones\n→ Every call is logged in CloudTrail, with a description you set\n\nMy take: the broker should derive the scope from the task, not from whatever the agent asks for. Also list dependent actions (Athena needs s3:GetObject on the data), or the task fails.\n\nSave this for when you wire up sub-agents 🔖 Which one is your agent running with today: a scoped role or the full one? Tell me below.\n\nFollow @shivanshu_builds for practical agent engineering on AWS.\n\nSource: https://aws.amazon.com/blogs/security/scope-down-permissions-of-existing-sessions-using-aws-sts-getscopedcredentials/",
+ "hashtags": [
+  "aiagents",
+  "agenticai",
+  "aws",
+  "awssecurity",
+  "iam"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "stack",
+   "kicker": "AWS STS · Agent security",
+   "headline": "A sub-agent can't ==out-rank its parent.==",
+   "sub": "New STS API: credentials that can only get narrower.",
+   "chips": [
+    "IAM",
+    "Sub-agents"
+   ]
+  },
+  {
+   "layout": "flow",
+   "title": "The ==broker== pattern",
+   "nodes": [
+    {
+     "label": "Role with wide access",
+     "sub": "every tenant prefix in one bucket",
+     "edge": "authenticate request"
+    },
+    {
+     "label": "Trusted credential broker",
+     "sub": "GetScopedCredentials + tenant prefix policy",
+     "highlight": true,
+     "edge": "scoped credentials only"
+    },
+    {
+     "label": "Worker or sub-agent",
+     "sub": "S3 denies other tenants' prefixes"
+    }
+   ],
+   "foot": "The worker never sees the ==original== credentials."
+  },
+  {
+   "layout": "code",
+   "title": "Step 1: scope-down policy",
+   "filename": "scope-down-policy.json",
+   "language": "json",
+   "font_size": 30,
+   "highlight": [
+    4,
+    5,
+    6
+   ],
+   "code": "{\"Version\":\"2012-10-17\",\"Statement\":[{\n  \"Effect\": \"Allow\",\n  \"Action\": \"s3:GetObject\",\n  \"Resource\":\n    \"arn:aws:s3:::amzn-s3-demo-bucket/*\"\n}]}",
+   "foot": "One inline policy, up to ==2,048 characters==."
+  },
+  {
+   "layout": "code",
+   "title": "Step 2: call the API",
+   "filename": "terminal",
+   "language": "bash",
+   "font_size": 30,
+   "highlight": [
+    2,
+    3
+   ],
+   "code": "aws sts get-scoped-credentials \\\n  --policy file://scope-down-policy.json \\\n  --duration-seconds 300 \\\n  --scoped-session-description \\\n    report-status-job",
+   "foot": "Same ==IAM identity==, less power, shorter life."
+  },
+  {
+   "layout": "cards",
+   "style": "stack",
+   "title": "Why it ==only narrows==",
+   "cards": [
+    {
+     "title": "Intersection",
+     "text": "Result = your session's permissions AND the policy."
+    },
+    {
+     "title": "Duration",
+     "text": "Can't exceed the remaining session time."
+    },
+    {
+     "title": "Recursion",
+     "text": "Call again to narrow more. Max 3 scope-down policies."
+    }
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Keep most, strip the risky",
+   "filename": "scope-down-policy.json",
+   "language": "json",
+   "font_size": 28,
+   "highlight": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "code": "{\"Statement\":[{\n \"Effect\": \"Allow\",\n \"NotAction\": [\n  \"iam:*\", \"organizations:*\",\n  \"account:*\", \"sts:AssumeRole*\",\n  \"s3:DeleteBucket\",\n  \"ec2:TerminateInstances\"\n ],\n \"Resource\": \"*\"\n}]}",
+   "foot": "Doesn't ==grant== anything. It only removes."
+  },
+  {
+   "layout": "pitfalls",
+   "title": "Before you ==ship it==",
+   "cards": [
+    {
+     "title": "Dependencies",
+     "text": "List dependent actions. Athena needs `s3:GetObject` on the data."
+    },
+    {
+     "title": "Limits",
+     "text": "200 requests/s per account per Region at launch."
+    },
+    {
+     "title": "Unsupported",
+     "text": "Some services don't accept scoped credentials. Check the API reference."
+    },
+    {
+     "title": "Isolation",
+     "text": "AWS suggests an isolated runtime such as Strands Box."
+    }
+   ]
+  },
+  {
+   "layout": "recap",
+   "lhs": "Safe delegation",
+   "terms": [
+    "broker",
+    "task-scoped policy",
+    "short duration",
+    "CloudTrail"
+   ],
+   "cta": [
+    "Save this before you wire up sub-agents."
+   ]
+  },
+  {
+   "layout": "sources",
+   "sources": [
+    {
+     "title": "Scope down permissions of existing sessions using AWS STS GetScopedCredentials",
+     "domain": "aws.amazon.com/blogs/security",
+     "note": "Nov 20, 2026"
+    },
+    {
+     "title": "GetScopedCredentials API reference",
+     "domain": "docs.aws.amazon.com/STS"
+    }
+   ],
+   "foot": "Limits and unsupported services: check the API reference."
+  }
+ ]
+}
