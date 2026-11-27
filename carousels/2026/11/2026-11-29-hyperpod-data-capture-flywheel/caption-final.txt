@@ -1,0 +1,25 @@
+Your eval set is frozen in the past. Your production traffic isn't.
+
+AWS published a full walkthrough of this loop on SageMaker HyperPod, and I like how unglamorous it is. A support-ticket router picks one of 6 labels. The retailer launches a new line of air conditioners. The router has no label for them, so it quietly sends them to "Other". Offline benchmarks look fine. Only the captured traffic shows the problem.
+
+The loop, on one cluster:
+
+1. Capture: HyperPod Data Capture writes every request and response to S3 (Tier 3, model pod)
+2. Analyze: Athena queries the files in place. "Other" went from 4.8% of tickets before the launch to 36.8% after
+3. Label: a SQL CASE policy relabels the records. Mixed signals go to human review
+4. Fine-tune: a LoRA run with the HyperPod training operator on a second GPU (60 seconds in their run)
+5. Redeploy: side by side, with capture still on
+
+Result on 280 held-out tickets: 235 correct before, 280 after. The new class went from 0/40 to 40/40, with no drop on the 5 old classes. In AWS's latency test, the capture proxy added no measurable latency.
+
+And the honest part, which I appreciate: it's synthetic data, and on 24 hand-written probes the new model scored 20/24. It learned shortcuts like "cooling means AC". That's exactly why capture stays on for round two.
+
+My take: the SQL labeling policy is the real idea here. Your Athena finding becomes a reviewable, re-runnable rule instead of a pile of hand labels.
+
+Save this for your next model refresh 🔖 Tell me in the comments: do you capture production inputs today, or just logs?
+
+Follow @shivanshu_builds for AI engineering on AWS, explained properly.
+
+Source: https://aws.amazon.com/blogs/machine-learning/build-a-model-improvement-flywheel-with-amazon-sagemaker-hyperpod-data-capture/
+
+#mlops #aws #sagemaker #aiengineering #machinelearning

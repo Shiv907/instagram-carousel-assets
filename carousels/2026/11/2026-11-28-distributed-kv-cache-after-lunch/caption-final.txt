@@ -1,0 +1,24 @@
+Your agent took minutes to reply after lunch. The model didn't get slower. The GPU had to re-read the whole conversation.
+
+Here's what's actually going on. Every request has two phases. Prefill reads the whole prompt and computes key/value (KV) tensors for every token. Decode then writes one token at a time and reuses that KV cache. Time to first token is mostly prefill.
+
+That KV cache lives in GPU memory (and host RAM or NVMe) on one server. Come back after a break, land on a different server, or lose a node, and it's gone. So the GPU recomputes KV for the system prompt, the tools and every earlier message before it writes a word.
+
+AWS's fix (GA on 18 Nov): a shared L2 KV cache on Amazon ElastiCache for Valkey, in the same AZ as your GPU fleet, read over RDMA on EFA. vLLM, SGLang and TensorRT-LLM plug in through the open-source LMCache connector.
+
+AWS's own claims: up to 40% lower cost per million tokens and up to 80% lower TTFT. Your number depends on your hit rate, so measure first.
+
+That's what the new distributed KV caching skill in the Agent Toolkit for AWS is for. It runs inside your coding agent, reads your fleet read-only, estimates savings from your own traffic with KVTrace, and asks before it creates anything.
+
+My honest take: if your prompts are short or never repeat, you can skip this. But if your agents carry long histories across many GPU servers, run KVTrace before you buy more GPUs.
+
+Save this for your next GPU bill review 🔖 Quick question for the comments: are you self-hosting your models, or calling a managed API?
+
+Follow @shivanshu_builds for AI engineering on AWS, explained properly.
+
+Sources:
+AWS ML blog (20 Nov): https://aws.amazon.com/blogs/machine-learning/cut-self-hosted-llm-cost-and-latency-with-the-distributed-kv-caching-agent-skill/
+AWS Database blog (18 Nov): https://aws.amazon.com/blogs/database/announcing-distributed-kv-caching-for-self-hosted-llms-with-amazon-elasticache/
+PagedAttention paper: https://arxiv.org/abs/2309.06180
+
+#llm #aws #aiengineering #genai #mlops
