@@ -1,0 +1,183 @@
+{
+ "title": "Your redactor sees half an SSN (AgentCore Gateway streaming response interception)",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "AgentCore Gateway",
+ "slug": "agentcore-gateway-streaming-redaction",
+ "caption": "Your PII redactor can read \"123-\" and \"45-6789\" and still never see an SSN. 👇\n\nAgentCore Gateway can now run your response interceptor on a streaming response. In STREAM mode your Lambda gets batches of events, and the client gets each batch as soon as you return it. You can change or drop each event's data, so you can remove sensitive data while the text streams.\n\nThe catch is in the docs' own example: text can split across events and across batches. \"my SSN is 123-\" in one event, \"45-6789\" in the next. A check on each event alone matches neither.\n\nWhat the docs say:\n\n1. STREAM mode applies to HTTP and inference targets.\n2. maxEventsPerInvocation is required.\n3. Each invocation is limited to 30 s and 6 MB.\n4. One output per input event. You can change data, not the event name.\n5. \"There is no ID that links the invocations of one response.\"\n6. Check the joined text of neighbouring events, and redact a partial match at the end of a batch.\n\nMy take: treat the batch boundary as part of your redaction logic, not an edge case. If you only test with whole sentences, you haven't tested it.\n\nOne community idea, not in the docs: also mask a leading fragment of the next batch. The cost is that a harmless batch starting with 2026 gets masked.\n\nSave this before you build a streaming redactor 🔖 Quick one for the comments: do you redact on the stream today, or after the full response?\n\nFollow @shivanshu_builds for practical agent engineering on AWS.\n\nOfficial docs; not run on AWS.\nSource: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway-interceptors-types.html",
+ "hashtags": [
+  "aiagents",
+  "agenticai",
+  "aws",
+  "bedrockagentcore",
+  "aisecurity"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "nodes",
+   "glyph": "***",
+   "kicker": "AgentCore Gateway",
+   "headline": "Your redactor sees ==half an SSN.==",
+   "sub": "Gateway can now intercept streamed responses. Here's the catch.",
+   "chips": [
+    "STREAM mode",
+    "response interceptor"
+   ]
+  },
+  {
+   "layout": "flow",
+   "title": "Before: wait. Now: ==batches.==",
+   "body": "With BUFFERED, the client gets no text until the model finishes.",
+   "lanes": [
+    {
+     "label": "BUFFERED",
+     "steps": [
+      "model done",
+      "Lambda",
+      "client"
+     ],
+     "end": "stop"
+    },
+    {
+     "label": "STREAM",
+     "steps": [
+      "event batch",
+      "Lambda",
+      "client"
+     ],
+     "end": "loop",
+     "highlight": true
+    }
+   ],
+   "after": "In STREAM mode the client gets each batch as soon as your function returns it."
+  },
+  {
+   "layout": "code",
+   "kicker": "HTTP + inference targets",
+   "title": "Turn it on: ==STREAM== mode",
+   "filename": "interceptor config",
+   "language": "json",
+   "highlight": [
+    3,
+    5
+   ],
+   "code": "{\n  \"interceptionPoints\": [\"RESPONSE\"],\n  \"responseInterceptionMode\": \"STREAM\",\n  \"responseStreamingConfiguration\": {\n    \"maxEventsPerInvocation\": 10\n  }\n}",
+   "foot": "Official docs; not run on AWS."
+  },
+  {
+   "layout": "cards",
+   "style": "grid",
+   "title": "The ==contract== in four rules",
+   "cards": [
+    {
+     "title": "Required",
+     "text": "`maxEventsPerInvocation`, at least 1."
+    },
+    {
+     "title": "Limits",
+     "text": "30 s and 6 MB per invocation."
+    },
+    {
+     "title": "One in, one out",
+     "text": "One output per input event, same order."
+    },
+    {
+     "title": "Only data",
+     "text": "You change `data`, never the event name."
+    }
+   ]
+  },
+  {
+   "layout": "timeline",
+   "title": "Where a per-event check ==fails==",
+   "pill": "Docs' example: split SSN",
+   "pill_label": "Input:",
+   "steps": [
+    {
+     "label": "Event 1",
+     "code": "\"my SSN is 123-\"",
+     "result": "full-SSN pattern: no match"
+    },
+    {
+     "label": "Event 2",
+     "code": "\"45-6789\"",
+     "result": "full-SSN pattern: no match"
+    },
+    {
+     "label": "Client",
+     "title": "reads the joined text",
+     "result": "`123-45-6789`, unredacted"
+    }
+   ],
+   "foot": "Each event looked ==clean on its own.=="
+  },
+  {
+   "layout": "pitfalls",
+   "title": "Where it ==breaks==",
+   "cards": [
+    {
+     "title": "No link",
+     "text": "\"There is no ID that links the invocations of one response.\"",
+     "fix": "Check joined text."
+    },
+    {
+     "title": "Batch edge",
+     "text": "Splits cross batches.",
+     "fix": "Redact a partial match at batch end."
+    },
+    {
+     "title": "Community idea",
+     "text": "Not in docs: mask a leading fragment. Cost: benign 2026 batches get masked."
+    }
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "The skeleton: ==one out per in==",
+   "filename": "interceptor.py",
+   "language": "python",
+   "highlight": [
+    9,
+    10
+   ],
+   "code": "def handler(event, ctx):\n    r = event[\"http\"][\"gatewayResponse\"]\n    if not r.get(\"isStreamingResponse\"):\n        return {\"interceptorOutputVersion\": \"1.0\",\n                \"http\": {}}\n    out = []\n    for e in r[\"events\"]:\n        d = e[\"data\"]\n        # redact: check joined neighbours\n        out.append({\"data\": d})\n    return {\"interceptorOutputVersion\": \"1.0\",\n            \"http\": {\"transformedGatewayResponse\":\n                     {\"events\": out}}}",
+   "foot": "Official docs; not run on AWS."
+  },
+  {
+   "layout": "recap",
+   "kicker": "TL;DR",
+   "lhs": "Safe stream redaction",
+   "terms": [
+    "STREAM mode",
+    "one out per in",
+    "joined text",
+    "batch tail"
+   ],
+   "cta": [
+    "Save this before you build a streaming redactor.",
+    "Test it with a split SSN."
+   ]
+  },
+  {
+   "layout": "sources",
+   "title": "Sources",
+   "sources": [
+    {
+     "title": "Types of interceptors: Stream responses through the response interceptor",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore"
+    },
+    {
+     "title": "Release notes for Amazon Bedrock AgentCore",
+     "domain": "docs.aws.amazon.com/bedrock-agentcore"
+    },
+    {
+     "title": "client-bedrock-agentcore-control CHANGELOG v3.1174.0",
+     "domain": "github.com/aws/aws-sdk-js-v3",
+     "note": "Nov 20, 2026"
+    }
+   ],
+   "foot": "Official docs; not run on AWS."
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+Your PII redactor can read "123-" and "45-6789" and still never see an SSN. 👇
+
+AgentCore Gateway can now run your response interceptor on a streaming response. In STREAM mode your Lambda gets batches of events, and the client gets each batch as soon as you return it. You can change or drop each event's data, so you can remove sensitive data while the text streams.
+
+The catch is in the docs' own example: text can split across events and across batches. "my SSN is 123-" in one event, "45-6789" in the next. A check on each event alone matches neither.
+
+What the docs say:
+
+1. STREAM mode applies to HTTP and inference targets.
+2. maxEventsPerInvocation is required.
+3. Each invocation is limited to 30 s and 6 MB.
+4. One output per input event. You can change data, not the event name.
+5. "There is no ID that links the invocations of one response."
+6. Check the joined text of neighbouring events, and redact a partial match at the end of a batch.
+
+My take: treat the batch boundary as part of your redaction logic, not an edge case. If you only test with whole sentences, you haven't tested it.
+
+One community idea, not in the docs: also mask a leading fragment of the next batch. The cost is that a harmless batch starting with 2026 gets masked.
+
+Save this before you build a streaming redactor 🔖 Quick one for the comments: do you redact on the stream today, or after the full response?
+
+Follow @shivanshu_builds for practical agent engineering on AWS.
+
+Official docs; not run on AWS.
+Source: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway-interceptors-types.html
+
+#aiagents #agenticai #aws #bedrockagentcore #aisecurity
