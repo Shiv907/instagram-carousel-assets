@@ -1,0 +1,162 @@
+{
+ "title": "Your agent took minutes to reply after lunch (distributed KV cache)",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "KV Cache",
+ "slug": "distributed-kv-cache-after-lunch",
+ "caption": "Your agent took minutes to reply after lunch. The model didn't get slower. The GPU had to re-read the whole conversation.\n\nHere's what's going on. Every request has two phases. Prefill reads the whole prompt and computes key/value (KV) tensors for every token. Decode then writes one token at a time and reuses that KV cache. Time to first token is mostly prefill.\n\nThat KV cache lives in GPU memory (and host RAM or NVMe) on one server. Come back after a break, land on a different server, or lose a node, and it's gone. So the GPU recomputes KV for the system prompt, the tools and every earlier message before it writes a word.\n\nAWS's fix (GA on 18 Nov): a shared L2 KV cache on Amazon ElastiCache for Valkey, in the same AZ as your GPU fleet, read over RDMA on EFA. vLLM, SGLang and TensorRT-LLM plug in through the open-source LMCache connector.\n\nAWS's own claims: up to 40% lower cost per million tokens and up to 80% lower TTFT. Your number depends on your hit rate, so measure first.\n\nThat's what the new distributed KV caching skill in the Agent Toolkit for AWS is for. It runs inside your coding agent, reads your fleet read-only, estimates savings from your own traffic with KVTrace, and asks before it creates anything.\n\nMy take: if your prompts are short or never repeat, skip it. If your agents carry long histories across many GPU servers, run KVTrace before you buy more GPUs.\n\nSave this for your next GPU bill review 🔖 Are you self-hosting your models or calling a managed API? Tell me below.\n\nFollow @shivanshu_builds for AI engineering on AWS, explained properly.\n\nSources:\nAWS ML blog (20 Nov): https://aws.amazon.com/blogs/machine-learning/cut-self-hosted-llm-cost-and-latency-with-the-distributed-kv-caching-agent-skill/\nAWS Database blog (18 Nov): https://aws.amazon.com/blogs/database/announcing-distributed-kv-caching-for-self-hosted-llms-with-amazon-elasticache/\nPagedAttention paper: https://arxiv.org/abs/2309.06180",
+ "hashtags": [
+  "llm",
+  "aws",
+  "aiengineering",
+  "genai",
+  "mlops"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "stack",
+   "kicker": "Deep concept · LLM inference",
+   "headline": "Your agent took ==minutes== to reply after lunch.",
+   "sub": "The model didn't slow down. Prefill did. Here's why, and the AWS fix.",
+   "chips": [
+    "KV cache",
+    "ElastiCache"
+   ]
+  },
+  {
+   "layout": "cards",
+   "style": "grid",
+   "title": "Every request has ==two phases==",
+   "cards": [
+    {
+     "title": "Prefill",
+     "text": "Reads the whole prompt and computes K and V for every token in parallel. Compute-bound. Sets your time to first token."
+    },
+    {
+     "title": "Decode",
+     "text": "Writes one token at a time, reading the growing KV cache. Memory-bandwidth-bound."
+    }
+   ],
+   "foot": "Prefill cost grows ==quadratically== with prompt length (AWS)."
+  },
+  {
+   "layout": "code",
+   "title": "What the ==KV cache== saves",
+   "filename": "attention.py",
+   "language": "python",
+   "font_size": 28,
+   "highlight": [
+    5,
+    6,
+    10
+   ],
+   "code": "# prefill: all n prompt tokens at once\nK, V = X @ W_k, X @ W_v      # n x d\n\n# decode step t: one new token x_t\nK = append(K, x_t @ W_k)     # cache grows\nV = append(V, x_t @ W_v)\no_t = softmax(q_t @ K.T / sqrt(d)) @ V\n\n# new GPU after lunch: K, V are gone\nK, V = H @ W_k, H @ W_v      # H = all history",
+   "foot": "Illustrative. Old keys and values are ==cached==; only the new token's are computed (PagedAttention §2)."
+  },
+  {
+   "layout": "flow",
+   "title": "After lunch, a ==different GPU== answers",
+   "body": "GPU memory (L0) and host RAM or NVMe (L1) are private to one server.",
+   "lanes": [
+    {
+     "label": "Same GPU",
+     "steps": [
+      "reuse KV",
+      "prefill new msg",
+      "decode"
+     ],
+     "end": "stop"
+    },
+    {
+     "label": "New GPU",
+     "steps": [
+      "recompute all history",
+      "then decode"
+     ],
+     "end": "stop",
+     "highlight": true
+    }
+   ],
+   "after": "Returning users, routing shifts and failed servers all hit the ==slow lane==."
+  },
+  {
+   "layout": "flow",
+   "title": "The fix: a ==shared L2 tier==",
+   "nodes": [
+    {
+     "label": "L0: GPU memory",
+     "sub": "fastest, smallest",
+     "edge": "miss"
+    },
+    {
+     "label": "L1: host RAM / NVMe",
+     "sub": "private to one server",
+     "edge": "miss"
+    },
+    {
+     "label": "L2: ElastiCache for Valkey",
+     "sub": "shared by every GPU, RDMA over EFA",
+     "highlight": true,
+     "edge": "hit"
+    },
+    {
+     "label": "Prefill only new tokens"
+    }
+   ]
+  },
+  {
+   "layout": "stat",
+   "kicker": "AWS's own claim",
+   "value": "80%",
+   "label": "up to this much lower TTFT, plus up to 40% lower cost per million tokens",
+   "context": "From AWS's benchmarks. Your result depends on cache hit rate and prompt length.",
+   "source": "AWS Database blog, 18 Nov 2026",
+   "bar": 80
+  },
+  {
+   "layout": "checklist",
+   "title": "The ==Agent Toolkit== skill checks first",
+   "items": [
+    "Reads your GPU fleet read-only (EFA count)",
+    "Estimates savings from your traffic with KVTrace",
+    "Asks approval before creating anything",
+    "Checks two cache-loaded runs match"
+   ],
+   "foot": "Runs inside your ==coding agent==."
+  },
+  {
+   "layout": "pitfalls",
+   "title": "When it ==won't help==",
+   "cards": [
+    {
+     "title": "Short prompts",
+     "text": "below the cutover point, recompute beats loading."
+    },
+    {
+     "title": "No reuse",
+     "text": "single calls like classification or translation."
+    },
+    {
+     "title": "Shared tenants",
+     "text": "timing can reveal another tenant's text.",
+     "fix": "Separate caches, or tenant ID in the KV hash."
+    }
+   ]
+  },
+  {
+   "layout": "recap",
+   "kicker": "TL;DR",
+   "lhs": "Fast reply after lunch",
+   "terms": [
+    "KV state",
+    "shared L2 cache",
+    "a fit check first"
+   ],
+   "cta": [
+    "Save this before your next GPU bill.",
+    "Sources: AWS ML blog (20 Nov), AWS Database blog (18 Nov), PagedAttention arXiv:2309.06180"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,202 @@
+{
+ "title": "Your benchmark is frozen in the past (HyperPod Data Capture flywheel)",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "HyperPod",
+ "slug": "hyperpod-data-capture-flywheel",
+ "caption": "Your eval set is frozen in the past. Your production traffic isn't.\n\nAWS published a full walkthrough of this loop on SageMaker HyperPod, and I like how unglamorous it is. A support-ticket router picks one of 6 labels. The retailer launches a new line of air conditioners. The router has no label for them, so it quietly sends them to \"Other\". Offline benchmarks look fine. Only the captured traffic shows the problem.\n\nThe loop, on one cluster:\n\n1. Capture: HyperPod Data Capture writes every request and response to S3 (Tier 3, model pod)\n2. Analyze: Athena queries the files in place. \"Other\" went from 4.8% of tickets before the launch to 36.8% after\n3. Label: a SQL CASE policy relabels the records. Mixed signals go to human review\n4. Fine-tune: a LoRA run with the HyperPod training operator on a second GPU (60 seconds in their run)\n5. Redeploy: side by side, with capture still on\n\nResult on 280 held-out tickets: 235 correct before, 280 after. The new class went from 0/40 to 40/40, with no drop on the 5 old classes. In AWS's latency test, the capture proxy added no measurable latency.\n\nThe honest part: it's synthetic data, and on 24 hand-written probes the new model scored 20/24. It learned shortcuts like \"cooling means AC\". Which is exactly why capture stays on for round two.\n\nMy take: the SQL labeling policy is the real idea here. Your Athena finding becomes a reviewable, re-runnable rule instead of a pile of hand labels.\n\nSave this for your next model refresh 🔖 Do you capture production inputs today, or only logs? Tell me below.\n\nFollow @shivanshu_builds for AI engineering on AWS, explained properly.\n\nSource: https://aws.amazon.com/blogs/machine-learning/build-a-model-improvement-flywheel-with-amazon-sagemaker-hyperpod-data-capture/",
+ "hashtags": [
+  "mlops",
+  "aws",
+  "sagemaker",
+  "aiengineering",
+  "machinelearning"
+ ],
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "loop",
+   "glyph": "S3",
+   "kicker": "Deep concept · MLOps on AWS",
+   "headline": "Your eval set is ==frozen in the past.==",
+   "sub": "Production traffic isn't. Capture it, label it with SQL, fine-tune.",
+   "chips": [
+    "SageMaker HyperPod",
+    "Athena"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "A router meets a ==product launch==",
+   "paragraphs": [
+    "A support router picks one of 6 labels. Then the retailer launches **Arctis air conditioners**. There's no label for them.",
+    "Offline benchmarks look unchanged. Only captured production traffic shows the shift."
+   ],
+   "callout": "Tickets routed to `Other`: 4.8% before launch -> 36.8% after"
+  },
+  {
+   "layout": "comparison",
+   "title": "Three ==capture tiers==",
+   "label_width": 260,
+   "columns": [
+    "Captures",
+    "Best for"
+   ],
+   "highlight": 1,
+   "rows": [
+    {
+     "label": "1 · Endpoint",
+     "values": [
+      "full payloads",
+      "compliance, Model Monitor"
+     ]
+    },
+    {
+     "label": "2 · Load balancer",
+     "values": [
+      "ALB access logs",
+      "traffic, error rates"
+     ]
+    },
+    {
+     "label": "3 · Model pod",
+     "values": [
+      "payloads + metadata",
+      "debugging, training data"
+     ]
+    }
+   ],
+   "foot": "Tiers 1 and 3 both store payloads. Enable both and you ==store it twice==."
+  },
+  {
+   "layout": "code",
+   "title": "Turning on ==Tier 3==",
+   "filename": "endpoint.yaml",
+   "language": "yaml",
+   "font_size": 30,
+   "highlight": [
+    3,
+    4
+   ],
+   "code": "dataCapture:\n  s3Uri: \"s3://${BUCKET}/capture/\"\n  modelPod:\n    enabled: true\n    initialSamplingPercentage: 100\n    bufferConfig:\n      batchSize: 50\n      flushIntervalSeconds: 60\n    payloadConfig:\n      maxPayloadSizeKB: 1024",
+   "foot": "Adds NGINX, OTel collector and S3 uploader ==sidecars== to the pod."
+  },
+  {
+   "layout": "steps-cycle",
+   "title": "The ==flywheel==, on one cluster",
+   "steps": [
+    {
+     "title": "Capture",
+     "text": "every request + response to S3"
+    },
+    {
+     "title": "Analyze",
+     "text": "Athena queries the files in place"
+    },
+    {
+     "title": "Label",
+     "text": "a SQL policy relabels records"
+    },
+    {
+     "title": "Fine-tune",
+     "text": "LoRA on a second GPU"
+    },
+    {
+     "title": "Redeploy",
+     "text": "side by side, capture still on"
+    }
+   ],
+   "center": "↻"
+  },
+  {
+   "layout": "code",
+   "title": "The labeling policy is ==SQL==",
+   "filename": "labeling_policy.sql",
+   "language": "sql",
+   "font_size": 26,
+   "highlight": [
+    2,
+    3,
+    4
+   ],
+   "code": "CASE\n  WHEN regexp_like(txt, 'arctis|air condition')\n   AND NOT regexp_like(txt, 'fridge|washer|oven')\n    THEN 'ProductAC'          -- new class\n  WHEN NOT regexp_like(txt, 'arctis|air condition')\n    THEN predicted_category   -- keep\n  ELSE NULL                   -- human review\nEND AS corrected_category",
+   "foot": "Abridged regex. Mixed signals go to ==Ground Truth== for human labels."
+  },
+  {
+   "layout": "comparison",
+   "title": "Before vs after ==fine-tuning==",
+   "label_width": 300,
+   "columns": [
+    "Before",
+    "After"
+   ],
+   "highlight": 1,
+   "rows": [
+    {
+     "label": "Held-out (280)",
+     "values": [
+      "235 (83.9%)",
+      "280 (100%)"
+     ]
+    },
+    {
+     "label": "New AC class (40)",
+     "values": [
+      "0/40",
+      "40/40"
+     ]
+    },
+    {
+     "label": "5 old classes (200)",
+     "values": [
+      "200/200",
+      "200/200"
+     ]
+    },
+    {
+     "label": "Hand-written probe (24)",
+     "values": [
+      "16/24",
+      "20/24"
+     ]
+    }
+   ],
+   "foot": "AWS walkthrough on ==synthetic data==. 60-second LoRA run."
+  },
+  {
+   "layout": "pitfalls",
+   "title": "Before you ==ship it==",
+   "cards": [
+    {
+     "title": "PII",
+     "text": "Tier 3 stores full payloads.",
+     "fix": "Sampling, KMS, S3 lifecycle rules, PII redaction."
+    },
+    {
+     "title": "Silent gaps",
+     "text": "missing CSI driver role: endpoint healthy, no captures."
+    },
+    {
+     "title": "Shortcuts",
+     "text": "the model learned 'any Arctis = AC', even price-match questions."
+    }
+   ]
+  },
+  {
+   "layout": "recap",
+   "kicker": "TL;DR",
+   "lhs": "Model flywheel",
+   "terms": [
+    "capture",
+    "query",
+    "label",
+    "fine-tune",
+    "redeploy"
+   ],
+   "cta": [
+    "Save this for your next model refresh.",
+    "Source: AWS ML blog, 13 Nov 2026 (HyperPod Data Capture flywheel)"
+   ]
+  }
+ ]
+}
