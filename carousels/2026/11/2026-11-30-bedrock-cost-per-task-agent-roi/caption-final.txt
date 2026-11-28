@@ -1,0 +1,23 @@
+Half the price per token. About 3x the cost per task. 🤔
+
+I had to read AWS's worked example twice. Model A lists at $0.50 in / $1.50 out per 1M tokens. Model B lists at double that. On one agent task, A costs $0.0042 and B costs $0.00145 (illustrative prices, AWS's own example).
+
+So why does the "cheap" model lose?
+- its tokenizer needs 50% more tokens for the same email
+- it pads its JSON, so 450 output tokens instead of 150
+- it misreads the tool schema and needs 3 turns, and every turn re-sends the whole history
+
+None of that shows up on the pricing page. That's why I stopped comparing per-call cost. Measure cost per successful task instead:
+cost per attempt / success rate (retry until success), or cost per attempt + (1 - success rate) x escalation cost.
+
+Then comes the harder question: is the agent actually better than the humans were? AWS's answer is boring, and it's right. Measure the human baseline BEFORE launch, log every run with an experiment variant, human minutes and outcome, then compare against a holdout. Their scorecard starts at >90% tasks without rework for green and <75% for red, and they say to calibrate those yourself.
+
+My take: humanMinutes is the field people skip. In AWS's sample log it's 35. Leave it out and "the agent did the work" quietly hides the person who spent that time checking it.
+
+Save this for your next cost review 🔖 And tell me below: do you know your agent's cost per successful task today?
+
+Follow @shivanshu_builds for AI engineering on AWS, explained properly.
+
+Source: https://aws.amazon.com/blogs/machine-learning/optimizing-cost-per-task-and-proving-agent-roi-on-amazon-bedrock/
+
+#aiagents #aws #amazonbedrock #finops #aiengineering
