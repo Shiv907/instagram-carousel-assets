@@ -1,0 +1,220 @@
+{
+ "title": "Cheaper per token, pricier per task (Bedrock cost per task and agent ROI)",
+ "handle": "@shivanshu_builds",
+ "theme": "paper-light",
+ "tag": "Bedrock cost",
+ "slug": "bedrock-cost-per-task-agent-roi",
+ "hashtags": [
+  "aiagents",
+  "aws",
+  "amazonbedrock",
+  "finops",
+  "aiengineering"
+ ],
+ "caption": "Half the price per token. About 3x the cost per task. 🤔\n\nAWS just published a worked example that every team running agents on Bedrock should see. Model A lists at $0.50 in / $1.50 out per 1M tokens. Model B lists at double that. On one agent task, A costs $0.0042 and B costs $0.00145 (illustrative prices, AWS's own example).\n\nWhy the \"cheap\" model loses:\n- its tokenizer needs 50% more tokens for the same email\n- it pads its JSON, so 450 output tokens instead of 150\n- it misreads the tool schema and needs 3 turns, and every turn re-sends the whole history\n\nThe fix is to measure cost per successful task, not per call:\ncost per attempt / success rate (retry until success), or cost per attempt + (1 - success rate) x escalation cost.\n\nThen the harder question: is the agent better than the humans were? AWS's answer is boring and right. Measure the human baseline BEFORE launch, log every run with an experiment variant, human minutes and outcome, then compare against a holdout. Their scorecard starts at >90% tasks without rework for green and <75% for red, and they say to calibrate those yourself.\n\nMy take: the humanMinutes field is the sneaky one. Without it, \"the agent did the work\" quietly hides the 35 minutes a person spent reviewing it.\n\nSave this for your next cost review 🔖 What is your agent's cost per successful task today? Tell me below.\n\nFollow @shivanshu_builds for AI engineering on AWS, explained properly.\n\nSource: https://aws.amazon.com/blogs/machine-learning/optimizing-cost-per-task-and-proving-agent-roi-on-amazon-bedrock/",
+ "slides": [
+  {
+   "layout": "hook",
+   "motif": "stack",
+   "kicker": "Deep concept · Bedrock cost",
+   "headline": "Half the price per token. ==~3x the cost== per task.",
+   "sub": "Why \"cheaper model\" is the wrong question, and how to prove an agent is worth it.",
+   "chips": [
+    "Amazon Bedrock",
+    "cost per task"
+   ]
+  },
+  {
+   "layout": "cards",
+   "title": "Four ==hidden drivers== of your bill",
+   "style": "grid",
+   "cards": [
+    {
+     "title": "Tokenizer",
+     "text": "Same text, different token counts per model family."
+    },
+    {
+     "title": "Verbosity",
+     "text": "Output often costs 3–5x input. Filler is pricey."
+    },
+    {
+     "title": "Agent loops",
+     "text": "Every turn re-sends the whole history as input."
+    },
+    {
+     "title": "Reasoning",
+     "text": "Thinking tokens bill as output, even if hidden."
+    }
+   ],
+   "foot": "None of these appear on the ==pricing page==."
+  },
+  {
+   "layout": "comparison",
+   "title": "One task, ==two models==",
+   "label_width": 330,
+   "columns": [
+    "Model A",
+    "Model B"
+   ],
+   "highlight": 1,
+   "rows": [
+    {
+     "label": "List price in / out (per 1M)",
+     "values": [
+      "$0.50 / $1.50",
+      "$1.00 / $3.00"
+     ]
+    },
+    {
+     "label": "Turn-1 input tokens",
+     "values": [
+      "1,500",
+      "1,000"
+     ]
+    },
+    {
+     "label": "Agent turns",
+     "values": [
+      "3",
+      "1"
+     ]
+    },
+    {
+     "label": "All tokens in / out",
+     "values": [
+      "6,150 / 750",
+      "1,000 / 150"
+     ]
+    },
+    {
+     "label": "Cost per task",
+     "values": [
+      "$0.0042",
+      "$0.00145"
+     ]
+    }
+   ],
+   "foot": "AWS's ==illustrative== example. The 2x-priced model costs 65% less."
+  },
+  {
+   "layout": "code",
+   "title": "Price the ==successful== task",
+   "filename": "formulas.txt",
+   "language": "text",
+   "font_size": 30,
+   "highlight": [
+    2,
+    5
+   ],
+   "code": "# retry until it works\ncost_per_success =\n  cost_per_attempt / success_rate\n\n# escalate on failure\ncost_per_success = cost_per_attempt\n  + (1 - success_rate) * escalation_cost",
+   "foot": "Cost per call flatters agents that ==loop==. Cost per success doesn't."
+  },
+  {
+   "layout": "code",
+   "title": "Where the ==numbers== come from",
+   "filename": "task_cost.py",
+   "language": "python",
+   "font_size": 28,
+   "highlight": [
+    3,
+    4,
+    5
+   ],
+   "code": "# sketch: sum usage over one task's turns\nfor u in turn_usages:\n    fresh += u[\"inputTokens\"]\n    read  += u[\"cacheReadInputTokens\"]\n    write += u[\"cacheWriteInputTokens\"]\n    out   += u[\"outputTokens\"]\n# price the 3 input buckets separately",
+   "foot": "With caching on, `inputTokens` is only the ==uncached== part. `CountTokens` compares tokenizers before you generate."
+  },
+  {
+   "layout": "bullets",
+   "title": "Four ==levers== per task",
+   "marker": "number",
+   "items": [
+    {
+     "title": "Prompt caching",
+     "text": "Cuts re-sent context. Biggest win on agent paths."
+    },
+    {
+     "title": "Prompt routing",
+     "text": "Easy requests go to a cheaper model."
+    },
+    {
+     "title": "Tool schema + maxTokens",
+     "text": "Caps verbosity better than prose."
+    },
+    {
+     "title": "Batch inference",
+     "text": "Halves the rate. No tools, no multi-turn."
+    }
+   ],
+   "foot": "Reasoning stays ==off== until a benchmark justifies it."
+  },
+  {
+   "layout": "code",
+   "title": "Log every run as an ==experiment==",
+   "filename": "workflow_run.json",
+   "language": "json",
+   "font_size": 27,
+   "highlight": [
+    7,
+    10
+   ],
+   "code": "{\n  \"runId\": \"run-8f3a2c\",\n  \"experiment\": {\n    \"variant\": \"treatment\",\n    \"holdout\": false },\n  \"ops\": {\n    \"humanMinutes\": 35 },\n  \"econ\": { \"estCostUsd\": 0.87 },\n  \"outcome\": {\n    \"revenueEventId\": \"opp-44121\" }\n}",
+   "foot": "Abridged from AWS. `humanMinutes` is what ==most teams omit==."
+  },
+  {
+   "layout": "comparison",
+   "title": "A scorecard with ==thresholds==",
+   "label_width": 300,
+   "columns": [
+    "Green",
+    "Red"
+   ],
+   "highlight": 0,
+   "rows": [
+    {
+     "label": "Adoption (active/intended)",
+     "values": [
+      ">70%",
+      "<40%"
+     ]
+    },
+    {
+     "label": "Quality (no rework)",
+     "values": [
+      ">90%",
+      "<75%"
+     ]
+    },
+    {
+     "label": "Efficiency (hrs/week)",
+     "values": [
+      ">target",
+      "<50% of target"
+     ]
+    },
+    {
+     "label": "Cost per success",
+     "values": [
+      "≤budget",
+      ">1.5x budget"
+     ]
+    }
+   ],
+   "foot": "Starting points, ==not prescriptions==. Red means retire or redesign."
+  },
+  {
+   "layout": "recap",
+   "kicker": "TL;DR",
+   "lhs": "Agent ROI",
+   "terms": [
+    "cost per success",
+    "human baseline",
+    "holdout test",
+    "a scorecard"
+   ],
+   "cta": [
+    "Save this before your next cost review.",
+    "Source: AWS ML blog, 12 Nov 2026 (Optimizing cost per task and proving agent ROI on Amazon Bedrock)"
+   ]
+  }
+ ]
+}
